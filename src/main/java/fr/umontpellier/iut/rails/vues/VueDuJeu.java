@@ -38,7 +38,7 @@ public class VueDuJeu extends VBox {
     private VueJoueurCourant joueurCourant;
 
     private HBox carteVisible;
-
+    private Button afficheCarteVisible;
 
 
 
@@ -46,17 +46,21 @@ public class VueDuJeu extends VBox {
         this.jeu = jeu;
         plateau = new VuePlateau();
         carteVisible = new HBox();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("-BATEAU-");
+        stringBuilder.append("-WAGON-");
+        stringBuilder.append("-DOUBLE-");
         passer = new Button("Passer");
         instruction = new Label();
+        afficheCarteVisible = new Button();
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
         joueurCourant=new VueJoueurCourant();
-        ImageView carteTVisible = new ImageView("images/cartesWagons/carte-%s");
-
-
+        ImageView carteTVisible = new ImageView("images/cartesWagons/carte"+stringBuilder+" %s.png");
+        afficheCarteVisible.setGraphic(carteTVisible);
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(plateau,passer,instruction,listeDestination,joueurCourant,carteVisible);
-        carteVisible.getChildren().addAll(carteTVisible);
+        getChildren().addAll(plateau,passer,instruction,listeDestination,joueurCourant,carteVisible,afficheCarteVisible);
+
     }
 
     public void creerBindings() {
@@ -72,7 +76,7 @@ public class VueDuJeu extends VBox {
         }
     }
 
-    ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<IDestination>() {
+    ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {
          @Override
          public void onChanged(Change<? extends IDestination> change) {
              while(change.next()){
