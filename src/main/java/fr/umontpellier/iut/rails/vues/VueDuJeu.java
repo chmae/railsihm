@@ -2,15 +2,13 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -30,8 +28,10 @@ public class VueDuJeu extends VBox {
     private VuePlateau plateau;
     private Button passer;
     private Label instruction;
+    private HBox listeDestination;
+    private VueJoueurCourant joueurCourant;
 
-    private VBox listeDestination;
+
 
 
     public VueDuJeu(IJeu jeu) {
@@ -39,18 +39,19 @@ public class VueDuJeu extends VBox {
         plateau = new VuePlateau();
         passer = new Button("Passer");
         instruction = new Label();
-        listeDestination = new VBox();
-//      getChildren().add(plateau);
+        listeDestination = new HBox();
+        joueurCourant=new VueJoueurCourant();
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        passer.addEventHandler(MouseEvent.MOUSE_CLICKED, actionPasserParDefaut);
-        instruction.textProperty().bind(jeu.instructionProperty());
-        getChildren().addAll(instruction,passer,listeDestination);
+        getChildren().addAll(plateau,instruction,passer,listeDestination,joueurCourant);
     }
 
     public void creerBindings() {
         plateau.prefWidthProperty().bind(getScene().widthProperty());
         plateau.prefHeightProperty().bind(getScene().heightProperty());
-//        plateau.creerBindings();
+        passer.addEventHandler(MouseEvent.MOUSE_CLICKED, actionPasserParDefaut);
+        instruction.textProperty().bind(jeu.instructionProperty());
+        joueurCourant.creerBindings();
+        plateau.creerBindings();
     }
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<IDestination>() {
          @Override
@@ -58,29 +59,43 @@ public class VueDuJeu extends VBox {
              while(change.next()){
                  if(change.wasAdded()) {
                      for (IDestination d : change.getAddedSubList()) {
-                         Label destliste = new Label(d.getVilles().toString());
-                         listeDestination.getChildren().add(destliste);
+//                         Label destliste = new Label(d.getVilles().toString());
+//                         listeDestination.getChildren().add(destliste);
+                         Button button = new Button(d.getVilles().toString());
+                         listeDestination.getChildren().add(button);
                      }
                  }
                  else if(change.wasRemoved()){
                      for(IDestination d : change.getRemoved()){
-                         Label l = trouverLabelDestination(listeDestination.getChildren(),d);
-                         listeDestination.getChildren().remove(l);
+                         Button b = trouverBoutonDestination(listeDestination.getChildren(),d);
+                         listeDestination.getChildren().remove(b);
+                         Button buttonToRemove = trouverBoutonDestination(listeDestination.getChildren(), d);
+                         listeDestination.getChildren().remove(buttonToRemove);
+                     }
                      }
                  }
              }
-         }
-     };
+         };
 
-    private Label trouverLabelDestination(List<Node> contienteltgraphique, IDestination d){
-       for(Node n : contienteltgraphique){
-           Label l = (Label) n;
-           if(l.getText().equals(d.getVilles().toString())){
-               return l;
-           }
-       }
-       return null;
-    }
+
+//    private Label trouverLabelDestination(List<Node> contienteltgraphique, IDestination d){
+//       for(Node n : contienteltgraphique){
+//           Label l = (Label) n;
+//           if(l.getText().equals(d.getVilles().toString())){
+//               return l;
+//           }
+//       }
+//       return null;
+//    }
+    private Button trouverBoutonDestination(List<Node> contienteltgraphique, IDestination d) {
+        for (Node n : contienteltgraphique) {
+        Button button = (Button) n;
+        if (button.getText().equals(d.getVilles().toString())) {
+             return button;
+          }
+        }
+        return null;
+        }
     public IJeu getJeu() {
         return jeu;
     }
