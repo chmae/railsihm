@@ -5,6 +5,7 @@ import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
@@ -14,7 +15,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 /**
  * Cette classe présente les éléments appartenant au joueur courant.
@@ -29,6 +32,8 @@ public class VueJoueurCourant extends GridPane {
     private GridPane carteDestinationEnMain;
     private ImageView img;
 
+    private Label labWagon;
+    private Label labBateau;
 
     public VueJoueurCourant(IJeu jeu){
 
@@ -43,6 +48,22 @@ public class VueJoueurCourant extends GridPane {
         VBox v = new VBox(img, nomJoueur);
         add(v, 0, 0);
         add(cartesEnMain, 1, 0);
+
+        ImageView imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
+        imgPionsBateau.setFitWidth(49);
+        imgPionsBateau.setFitHeight(48.5);
+        labBateau = new Label();
+
+        ImageView imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
+        imgPionsWagon.setFitWidth(49);
+        imgPionsWagon.setFitHeight(48.5);
+        labWagon = new Label();
+
+
+        add(imgPionsWagon, 0,1);
+        add(labWagon, 1, 1);
+        add(imgPionsBateau, 0, 2);
+        add(labBateau, 1, 2);
 
 
     }
@@ -80,6 +101,9 @@ public class VueJoueurCourant extends GridPane {
         img.setFitWidth(105);
 
         cartesEnMain.getChildren().clear();
+
+        labWagon.textProperty().bind(new SimpleIntegerProperty(joueurCourant.getNbPionsWagon()).asString());
+        labBateau.textProperty().bind(new SimpleIntegerProperty(joueurCourant.getNbPionsBateau()).asString());
 
         for(ICarteTransport c: joueurCourant.getCartesTransport()) {
 
