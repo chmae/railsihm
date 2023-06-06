@@ -45,7 +45,7 @@ public class VueJoueurCourant extends GridPane {
 
     }
 
-    ListChangeListener<ICarteTransport> cartesTransportsChange = new ListChangeListener<ICarteTransport>() {
+    ListChangeListener<ICarteTransport> cartesTransportsChange = new ListChangeListener<>() {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
             while(change.next()){

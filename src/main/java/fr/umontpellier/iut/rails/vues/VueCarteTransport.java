@@ -10,7 +10,7 @@ import javafx.scene.layout.Pane;
  *
  * On y définit le listener à exécuter lorsque cette carte a été choisie par l'utilisateur
  */
-public class VueCarteTransport extends Button {
+public class VueCarteTransport extends Pane {
 
     private final ICarteTransport carteTransport;
     private final ImageView img;
@@ -20,7 +20,7 @@ public class VueCarteTransport extends Button {
         img = getImage(carteTransport);
         img.setFitWidth(160*0.7);
         img.setFitHeight(100*0.7);
-        setGraphic(img);
+        getChildren().add(img);
 
     }
 
