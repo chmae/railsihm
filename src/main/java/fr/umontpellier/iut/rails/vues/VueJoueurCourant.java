@@ -3,9 +3,12 @@ package fr.umontpellier.iut.rails.vues;
 import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -14,9 +17,9 @@ import javafx.scene.layout.VBox;
  *
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
-public class VueJoueurCourant extends VBox {
+public class VueJoueurCourant extends GridPane {
 
-    private IJoueur joueurCourant;
+    private ObjectProperty<IJoueur> joueurCourant;
     private Label nomJoueur;
     private VBox cartesEnMain;
 
@@ -24,22 +27,29 @@ public class VueJoueurCourant extends VBox {
 
     private ImageView img;
 
-    private String color;
 
     public VueJoueurCourant(IJeu jeu){
-        joueurCourant = jeu.joueurCourantProperty().get();
+        joueurCourant = jeu.joueurCourantProperty();
+        joueurCourant.addListener(joueurCourantAChange);
         nomJoueur = new Label();
         cartesEnMain = new VBox();
         cartesJoueurC = new HBox();
         img = new ImageView();
-        color = "";
-        getChildren().addAll(nomJoueur,cartesEnMain);
+
+        add(img, 0, 0);
+        add(nomJoueur, 0, 1);
+
 
     }
     /*A REVOIR CETTE ECOUTEUR */
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
         nomJoueur.setText(joueurCourant.getNom());
-        getChildren().clear();
+//        getChildren().clear();
+
+        img.setImage(new Image("images/cartesWagons/avatar-" + joueurCourant.getCouleur().name()+ ".png"));
+        img.setFitHeight(83);
+        img.setFitWidth(105);
+
         for(ICarteTransport c : joueurCourant.getCartesTransport()){
                 if(c.getAncre() && c.estWagon()){
                     System.out.println("ANCRE" + " " + c.getStringCouleur());
@@ -51,18 +61,13 @@ public class VueJoueurCourant extends VBox {
                     System.out.println("BATEAU"+ " " + c.getStringCouleur());
                 }
                 if(c.estBateau() && c.estDouble()){
-                    System.out.println("BATEAU"+ "DOUBLE"+ " " + c.getStringCouleur());
+                    System.out.println("BATEAU"+ " DOUBLE"+ " " + c.getStringCouleur());
                 }
                 if(c.estJoker()){
                     System.out.println("JOKER" + " " + c.getStringCouleur());
                 }
                 Label carte = new Label();
                 cartesEnMain.getChildren().add(carte);
-
-            img = new ImageView("images/cartesWagons/avatar-" + joueurCourant.getCouleur()+ ".png");
-            img.setFitHeight(83);
-            img.setFitWidth(105);
-            color = joueurCourant.getCouleur().name();
         }
     };
 
@@ -79,16 +84,4 @@ public class VueJoueurCourant extends VBox {
 
     }
 
-
-    public String getColor() {
-        return color;
-    }
-
-    public ImageView getImg() {
-        return img;
-    }
-
-    public Label getNom() {
-        return nomJoueur;
-    }
 }

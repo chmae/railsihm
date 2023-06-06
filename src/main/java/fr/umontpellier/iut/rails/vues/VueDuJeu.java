@@ -52,8 +52,6 @@ public class VueDuJeu extends VBox {
     private VBox joueursAvatar;
     private HBox top;
 
-    private Pane joueurCourantPan;
-
 
 
     public VueDuJeu(IJeu jeu) {
@@ -71,7 +69,6 @@ public class VueDuJeu extends VBox {
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
-        joueurCourantPan = new Pane();
         afficherCarteBateau = new Button();
         afficherCarteWagon = new Button();
         initAvatar();
@@ -96,7 +93,7 @@ public class VueDuJeu extends VBox {
         top.getChildren().addAll(plateau, joueursAvatar);
         top.setSpacing(0);
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,joueurCourant,carteVisible, joueurCourantPan,carteTrans);
+        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,carteVisible, joueurCourant,carteTrans);
 
         //joueurCourant.afficherCartes();
 
@@ -116,11 +113,6 @@ public class VueDuJeu extends VBox {
         textFieldPions.textProperty().addListener(textFieldPionsListener);
         jeu.joueurCourantProperty().addListener(changeJoueur);
 
-        GridPane p =new GridPane();
-        joueurCourantPan.setStyle("-fx-background-color:" + joueurCourant.getColor());
-        p.add(joueurCourant.getImg(), 0, 0);
-        p.add(joueurCourant.getNom(), 0, 1);
-        joueurCourantPan.getChildren().add(p);
     }
 
     public void resizeBind(){
@@ -128,8 +120,8 @@ public class VueDuJeu extends VBox {
         joueursAvatar.prefWidthProperty().bind(widthProperty().multiply(0.5));
         joueursAvatar.prefHeightProperty().bind(heightProperty());
 
-        joueurCourantPan.minHeightProperty().bind(heightProperty().multiply(0.12));
-        joueurCourantPan.maxHeightProperty().bind(heightProperty().multiply(0.12));
+        joueurCourant.minHeightProperty().bind(heightProperty().multiply(0.12));
+        joueurCourant.maxHeightProperty().bind(heightProperty().multiply(0.12));
     }
 
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {
@@ -220,35 +212,18 @@ public class VueDuJeu extends VBox {
         }
     };
 
-    ChangeListener<IJoueur> changeJoueur = new ChangeListener<IJoueur>() {
-        @Override
-        public void changed(ObservableValue<? extends IJoueur> observableValue, IJoueur iJoueur, IJoueur t1) {
-            initAvatar();
-        }
-    };
+    ChangeListener<IJoueur> changeJoueur = (observableValue, iJoueur, t1) -> initAvatar();
 
     private void initAvatar(){
         joueursAvatar.getChildren().clear();
-        joueurCourantPan.getChildren().clear();
         ImageView img;
 
         for(IJoueur j: jeu.getJoueurs()){
-
-            Pane pane= new Pane();
-            String color = "black";
-            switch (j.getCouleur()){
-                case ROUGE -> color = "red";
-                case BLEU -> color = "blue";
-                case ROSE -> color = "pink";
-                case VERT -> color = "green";
-                case JAUNE -> color = "yellow";
-            }
 
             GridPane p = new GridPane();
 
             if(j != jeu.joueurCourantProperty().get()) {
 
-                pane.setStyle("-fx-background-color:" + color);
 
                 img = new ImageView("images/cartesWagons/avatar-" + j.getCouleur() + ".png");
                 img.setFitHeight(83);
@@ -256,21 +231,8 @@ public class VueDuJeu extends VBox {
                 p.add(img, 0, 0);
                 p.add(new Label(j.getNom()), 0, 1);
 
-                joueursAvatar.getChildren().add(pane);
-            }else{
-
-                //joueurCourantPan.setStyle("-fx-background-color:" + color);
-
-                //img = new ImageView("images/cartesWagons/avatar-" + jeu.joueurCourantProperty().get().getCouleur()+ ".png");
-//                img.setFitHeight(83);
-//                img.setFitWidth(105);
-//                p.add(img, 0, 0);
-//                p.add(new Label(jeu.joueurCourantProperty().get().getNom()), 0, 1);
-
-                //joueurCourantPan.getChildren().add(pane);
-
+                joueursAvatar.getChildren().add(p);
             }
-            pane.getChildren().add(p);
         }
     }
 
