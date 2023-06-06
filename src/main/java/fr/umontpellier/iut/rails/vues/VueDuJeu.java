@@ -70,8 +70,9 @@ public class VueDuJeu extends VBox {
         joueursAvatar = new VBox();
         afficherCarteBateau = new Button();
         afficherCarteWagon = new Button();
-        afficheCarteVisible = new Button();
+//        afficheCarteVisible = new Button();
         afficherDestination = new Button();
+
 
         initAvatar();
         resizeBind();
@@ -164,10 +165,11 @@ public class VueDuJeu extends VBox {
         return null;
     }
 
-    private Button remplacerCarteVisible(ICarteTransport c) {
-        for (int i = 0; i < carteVisible.getChildren().size(); i++) {
-            if (c.equals(carteVisible.getChildren().get(i))) {
-                return (Button) carteVisible.getChildren().get(i);
+    private Button remplacerCarteVisible(List<Node> contienteltgraphique,ICarteTransport c) {
+        for (Node n : contienteltgraphique) {
+            Button button = (Button) n;
+            if (button.getText().equals(c.getNom())){
+                return button;
             }
         }
         return null;
@@ -179,22 +181,27 @@ public class VueDuJeu extends VBox {
         public void onChanged(Change<? extends ICarteTransport> change) {
             Platform.runLater(() -> {
                 while (change.next()) {
-                    if (!change.getAddedSubList().isEmpty()) {
+
+                    if (change.wasAdded()) {
                         for (ICarteTransport c : change.getAddedSubList()) {
-                            afficheCarteVisible = new Button(); //a voir si a modifier
-                            carteTVisible = VueCarteTransport.getImage(c);
-                            carteTVisible.setFitWidth(160);
-                            carteTVisible.setFitHeight(100);
-                            afficheCarteVisible.setGraphic(carteTVisible);
+                            afficheCarteVisible = new Button();
+                            ImageView carteImageView = VueCarteTransport.getImage(c);
+                            carteImageView.setFitWidth(120);
+                            carteImageView.setFitHeight(80);
+                            afficheCarteVisible.setGraphic(carteImageView);
                             carteVisible.getChildren().add(afficheCarteVisible);
                             afficheCarteVisible.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteTransportAEteChoisie(c));
 
                         }
-                        if(change.wasRemoved()) { // A CONTINUER+ MODIFIER
-                            for (int i = 0; i < change.getRemovedSize(); i++) {
-                                carteVisible.getChildren().remove(remplacerCarteVisible(change.getRemoved().get(i)));
-                            }
+                    }
+                    else if (change.wasRemoved()) {
+                        for (ICarteTransport c : change.getRemoved()) {
+                            Button b = remplacerCarteVisible(carteVisible.getChildren(), c);
+                            carteVisible.getChildren().remove(b);
+                            carteVisible.getChildren().remove(afficheCarteVisible);
+
                         }
+
                     }
 
 
