@@ -8,6 +8,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -41,11 +43,15 @@ public class VueDuJeu extends VBox {
     private VueJoueurCourant joueurCourant;
 
     private HBox carteVisible;
+    private HBox carteTrans;
     private Button afficheCarteVisible;
+    private Button afficherCarteWagon;
+    private Button afficherCarteBateau;
     private ImageView carteTVisible;
     private TextField textFieldPions;
     private VBox joueursAvatar;
     private HBox top;
+
     private Pane joueurCourantPan;
 
 
@@ -54,6 +60,7 @@ public class VueDuJeu extends VBox {
         this.jeu = jeu;
         top = new HBox();
         plateau = new VuePlateau();
+        carteTrans = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
         passer = new Button("Passer");
@@ -65,14 +72,31 @@ public class VueDuJeu extends VBox {
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
         joueurCourantPan = new Pane();
+        afficherCarteBateau = new Button();
+        afficherCarteWagon = new Button();
         initAvatar();
-
         resizeBind();
+
+        ImageView imageCarteW = new ImageView();
+        ImageView imageCarteB = new ImageView();
+        imageCarteW.setImage(new Image("images/cartesWagons/dos-WAGON.png"));
+        imageCarteB.setImage(new Image("images/cartesWagons/dos-BATEAU.png"));
+        imageCarteW.setFitHeight(150);
+        imageCarteW.setFitWidth(100);
+        imageCarteB.setFitHeight(150);
+        imageCarteB.setFitWidth(100);
+        afficherCarteWagon.setGraphic(imageCarteW);
+        afficherCarteBateau.setGraphic(imageCarteB);
+        carteTrans.setAlignment(Pos.BOTTOM_CENTER);
+        afficherCarteBateau.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteBateauAEtePiochee());
+        afficherCarteWagon.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteWagonAEtePiochee());
+        carteTrans.getChildren().addAll(afficherCarteBateau,afficherCarteWagon);
+
 
         top.getChildren().addAll(plateau, joueursAvatar);
         top.setSpacing(0);
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,joueurCourant,carteVisible, joueurCourantPan);
+        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,joueurCourant,carteVisible, joueurCourantPan,carteTrans);
 
         //joueurCourant.afficherCartes();
 
