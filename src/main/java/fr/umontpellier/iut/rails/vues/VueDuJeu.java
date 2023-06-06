@@ -39,10 +39,11 @@ public class VueDuJeu extends VBox {
     private VueJoueurCourant joueurCourant;
 
     private HBox carteVisible;
-    private HBox carteTrans;
+    private HBox carteTrans_Dest;
     private Button afficheCarteVisible;
     private Button afficherCarteWagon;
     private Button afficherCarteBateau;
+    private Button afficherDestination;
     private ImageView carteTVisible;
     private TextField textFieldPions;
     private VBox joueursAvatar;
@@ -54,7 +55,7 @@ public class VueDuJeu extends VBox {
         this.jeu = jeu;
         top = new HBox();
         plateau = new VuePlateau();
-        carteTrans = new HBox();
+        carteTrans_Dest = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
         passer = new Button("Passer");
@@ -67,29 +68,40 @@ public class VueDuJeu extends VBox {
         joueursAvatar = new VBox();
         afficherCarteBateau = new Button();
         afficherCarteWagon = new Button();
+        afficheCarteVisible = new Button();
+        afficherDestination = new Button();
+
         initAvatar();
         resizeBind();
 
         ImageView imageCarteW = new ImageView();
         ImageView imageCarteB = new ImageView();
+        ImageView dest = new ImageView();
         imageCarteW.setImage(new Image("images/cartesWagons/dos-WAGON.png"));
         imageCarteB.setImage(new Image("images/cartesWagons/dos-BATEAU.png"));
+        dest.setImage(new Image("images/cartesWagons/destinations.png"));
         imageCarteW.setFitHeight(150);
         imageCarteW.setFitWidth(100);
         imageCarteB.setFitHeight(150);
         imageCarteB.setFitWidth(100);
+        dest.setFitWidth(150);
+        dest.setFitHeight(100);
         afficherCarteWagon.setGraphic(imageCarteW);
         afficherCarteBateau.setGraphic(imageCarteB);
-        carteTrans.setAlignment(Pos.BOTTOM_CENTER);
+        afficherDestination.setGraphic(dest);
+        carteTrans_Dest.setAlignment(Pos.BOTTOM_RIGHT);
+
         afficherCarteBateau.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteBateauAEtePiochee());
         afficherCarteWagon.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteWagonAEtePiochee());
-        carteTrans.getChildren().addAll(afficherCarteBateau,afficherCarteWagon);
+        afficherDestination.setOnAction(actionEvent ->((VueDuJeu) getScene().getRoot()).getJeu().nouvelleDestinationDemandee());
+        carteTrans_Dest.getChildren().addAll(afficherCarteBateau,afficherCarteWagon,afficherDestination);
+
 
 
         top.getChildren().addAll(plateau, joueursAvatar);
         top.setSpacing(0);
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,carteVisible, joueurCourant,carteTrans);
+        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,carteVisible, joueurCourant, carteTrans_Dest);
 
         //joueurCourant.afficherCartes();
 
@@ -150,6 +162,16 @@ public class VueDuJeu extends VBox {
         return null;
     }
 
+    private Button remplacerCarteVisible(ICarteTransport c) {
+        for (int i = 0; i < carteVisible.getChildren().size(); i++) {
+            if (c.equals(carteVisible.getChildren().get(i))) {
+                return (Button) carteVisible.getChildren().get(i);
+            }
+        }
+        return null;
+    }
+
+
     ListChangeListener<ICarteTransport> ecouteCartesVisibles = new ListChangeListener<>() {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
@@ -163,10 +185,19 @@ public class VueDuJeu extends VBox {
                             carteTVisible.setFitHeight(100);
                             afficheCarteVisible.setGraphic(carteTVisible);
                             carteVisible.getChildren().add(afficheCarteVisible);
+                            afficheCarteVisible.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteTransportAEteChoisie(c));
 
                         }
+                        if(change.wasRemoved()) { // A CONTINUER+ MODIFIER
+                            for (int i = 0; i < change.getRemovedSize(); i++) {
+                                carteVisible.getChildren().remove(remplacerCarteVisible(change.getRemoved().get(i)));
+                            }
+                        }
                     }
+
+
                     textFieldPions.setVisible(carteVisible.getChildren().isEmpty());
+
                 }
             });
         }
