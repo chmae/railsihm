@@ -41,7 +41,7 @@ public class VueDuJeu extends VBox {
 
     private HBox carteVisible;
     private HBox carteTrans_Dest;
-    private Button afficheCarteVisible;
+    private VueCarteTransport afficheCarteVisible;
     private Button afficherCarteWagon;
     private Button afficherCarteBateau;
     private Button afficherDestination;
@@ -49,22 +49,25 @@ public class VueDuJeu extends VBox {
     private TextField textFieldPions;
     private VBox joueursAvatar;
     private HBox top;
+    private VBox middle;
 
 
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         top = new HBox();
+        middle = new VBox();
         plateau = new VuePlateau();
         carteTrans_Dest = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
+//        carteVisible.setTranslateY(-35);
         passer = new Button("Passer");
         instruction = new Label();
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
         joueurCourant=new VueJoueurCourant(jeu);
-        joueurCourant.setTranslateY(15);
+//        joueurCourant.setTranslateY(65);
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
@@ -103,8 +106,13 @@ public class VueDuJeu extends VBox {
 
         top.getChildren().addAll(plateau, joueursAvatar);
         top.setSpacing(0);
+
+        VBox m = new VBox(carteVisible, joueurCourant);
+        m.setSpacing(100);
+        middle.getChildren().addAll(passer, instruction, textFieldPions, listeDestination, m, carteTrans_Dest);
+
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,carteVisible, joueurCourant, carteTrans_Dest);
+        getChildren().addAll(top,middle);
 
         //joueurCourant.afficherCartes();
 
@@ -165,11 +173,11 @@ public class VueDuJeu extends VBox {
         return null;
     }
 
-    private Button remplacerCarteVisible(List<Node> contienteltgraphique,ICarteTransport c) {
+    private VueCarteTransport remplacerCarteVisible(List<Node> contienteltgraphique,ICarteTransport c) {
         for (Node n : contienteltgraphique) {
-            Button button = (Button) n;
-            if (button.getText().equals(c.getNom())){
-                return button;
+            VueCarteTransport VCT = (VueCarteTransport) n;
+            if (VCT.getCarteTransport().equals(c)){
+                return VCT;
             }
         }
         return null;
@@ -184,21 +192,16 @@ public class VueDuJeu extends VBox {
 
                     if (change.wasAdded()) {
                         for (ICarteTransport c : change.getAddedSubList()) {
-                            afficheCarteVisible = new Button();
-                            ImageView carteImageView = VueCarteTransport.getImage(c);
-                            carteImageView.setFitWidth(120);
-                            carteImageView.setFitHeight(80);
-                            afficheCarteVisible.setGraphic(carteImageView);
+                            afficheCarteVisible = new VueCarteTransport(c, 0);
                             carteVisible.getChildren().add(afficheCarteVisible);
-                            afficheCarteVisible.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteTransportAEteChoisie(c));
+                            afficheCarteVisible.setOnMouseClicked(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteTransportAEteChoisie(c));
 
                         }
                     }
                     else if (change.wasRemoved()) {
                         for (ICarteTransport c : change.getRemoved()) {
-                            Button b = remplacerCarteVisible(carteVisible.getChildren(), c);
-                            carteVisible.getChildren().remove(b);
-                            carteVisible.getChildren().remove(afficheCarteVisible);
+                            VueCarteTransport VCT = remplacerCarteVisible(carteVisible.getChildren(), c);
+                            carteVisible.getChildren().remove(VCT);
 
                         }
 

@@ -34,33 +34,36 @@ public class VueCarteTransport extends Pane {
         img.setFitHeight(100*0.7);
         getChildren().add(img);
 
-        this.nbCarte = new SimpleIntegerProperty(nbCarte);
+        if(nbCarte != 0) {
+            this.nbCarte = new SimpleIntegerProperty(nbCarte);
 
-        Circle nbCircle = new Circle(10);
-        nbCircle.setFill(Color.BLACK);
-        nbCircle.setCenterX(4);
-        nbCircle.setCenterY(8);
+            Circle nbCircle = new Circle(10);
+            nbCircle.setFill(Color.BLACK);
+            nbCircle.setCenterX(4);
+            nbCircle.setCenterY(8);
 
-        Label nbTxt = new Label();
-        nbTxt.textProperty().bind(this.nbCarte.asString());
-        nbTxt.setTextFill(Color.WHITE);
+            Label nbTxt = new Label();
+            nbTxt.textProperty().bind(this.nbCarte.asString());
+            nbTxt.setTextFill(Color.WHITE);
 
-        getChildren().addAll(nbCircle,nbTxt);
+            getChildren().addAll(nbCircle, nbTxt);
+        }
 
 
     }
 
      static ImageView getImage(ICarteTransport carteTransport) {
         StringBuilder stringBuilder = new StringBuilder();
-            if (carteTransport.estBateau()) {
-                stringBuilder.append("-BATEAU");
-            } else if (carteTransport.estDouble()) {
-                stringBuilder.append("-DOUBLE");
-            } else if (carteTransport.estWagon()) {
-                stringBuilder.append("-WAGON");
-            } else {
-                stringBuilder.append("-JOKER");
-            }
+
+        if (carteTransport.estDouble()) {
+            stringBuilder.append("-DOUBLE");
+        } else if (carteTransport.estWagon()) {
+            stringBuilder.append("-WAGON");
+        } else if (carteTransport.estBateau()) {
+            stringBuilder.append("-BATEAU");
+        }else{
+            stringBuilder.append("-JOKER");
+        }
 
 
          stringBuilder.append("-").append(carteTransport.getStringCouleur());
