@@ -18,4 +18,6 @@ public interface ICarteTransport {
         return Stream.of(Couleur.values()).filter(c -> c != Couleur.GRIS).map(Objects::toString).toList();
     }
 
+
+    String getNom();
 }

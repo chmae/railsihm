@@ -1,9 +1,19 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.ICarteTransport;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+
+import java.util.Objects;
 
 /**
  * Cette classe représente la vue d'une carte Transport.
@@ -15,23 +25,39 @@ public class VueCarteTransport extends Pane {
     private final ICarteTransport carteTransport;
     private final ImageView img;
 
-    public VueCarteTransport(ICarteTransport carteTransport) {
+    private SimpleIntegerProperty nbCarte;
+
+    public VueCarteTransport(ICarteTransport carteTransport, int nbCarte) {
         this.carteTransport = carteTransport;
         img = getImage(carteTransport);
         img.setFitWidth(160*0.7);
         img.setFitHeight(100*0.7);
         getChildren().add(img);
 
+        this.nbCarte = new SimpleIntegerProperty(nbCarte);
+
+        Circle nbCircle = new Circle(10);
+        nbCircle.setFill(Color.BLACK);
+        nbCircle.setCenterX(4);
+        nbCircle.setCenterY(8);
+
+        Label nbTxt = new Label();
+        nbTxt.textProperty().bind(this.nbCarte.asString());
+        nbTxt.setTextFill(Color.WHITE);
+
+        getChildren().addAll(nbCircle,nbTxt);
+
+
     }
 
     static ImageView getImage(ICarteTransport carteTransport) {
         StringBuilder stringBuilder = new StringBuilder();
-        if(carteTransport.estBateau()){
+        if(carteTransport.estDouble()){
+            stringBuilder.append("-DOUBLE");
+        }else if(carteTransport.estBateau()){
             stringBuilder.append("-BATEAU");
         }else if(carteTransport.estWagon()){
             stringBuilder.append("-WAGON");
-        }else if(carteTransport.estDouble()){
-            stringBuilder.append("-DOUBLE");
         }else{
             stringBuilder.append("-JOKER");
         }
@@ -51,4 +77,11 @@ public class VueCarteTransport extends Pane {
         return carteTransport;
     }
 
+    public SimpleIntegerProperty getNbCarte() {
+        return nbCarte;
+    }
+
+    public void setNbCarte(int nbCarte) {
+        this.nbCarte.setValue(nbCarte);
+    }
 }

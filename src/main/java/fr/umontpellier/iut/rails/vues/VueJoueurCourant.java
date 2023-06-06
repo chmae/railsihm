@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,17 +25,18 @@ public class VueJoueurCourant extends GridPane {
 
     private ObjectProperty<IJoueur> joueurCourant;
     private Label nomJoueur;
-    private GridPane cartesEnMain;
+    private HBox cartesEnMain;
     private GridPane carteDestinationEnMain;
     private ImageView img;
 
 
     public VueJoueurCourant(IJeu jeu){
+
         joueurCourant = jeu.joueurCourantProperty();
         joueurCourant.addListener(joueurCourantAChange);
 
         nomJoueur = new Label();
-        cartesEnMain = new GridPane();
+        cartesEnMain = new HBox();
 
         img = new ImageView();
 
@@ -49,16 +51,22 @@ public class VueJoueurCourant extends GridPane {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
             while(change.next()){
-                for(ICarteTransport c: change.getAddedSubList()){
-                    int i;
-                    int j;
+                for(ICarteTransport c: change.getAddedSubList()) {
 
-                    i = (joueurCourant.get().getCartesTransport().size()-1)/5;
-                    j = (joueurCourant.get().getCartesTransport().size()-1)%5;
-                    System.out.println(j);
+                    boolean b = false;
+                    for (Node node : cartesEnMain.getChildren()) {
+                        VueCarteTransport VCT = (VueCarteTransport) node;
 
-                    VueCarteTransport v = new VueCarteTransport(c);
-                    cartesEnMain.add(v,j,i);
+                        if (VCT.getCarteTransport().equals(c)){
+                            VCT.setNbCarte(VCT.getNbCarte().get()+1);
+                            b = true;
+                            break;
+                        }
+                    }
+                    if(!b){
+                        cartesEnMain.getChildren().add(new VueCarteTransport(c,1));
+                        break;
+                    }
                 }
             }
         }
@@ -72,29 +80,28 @@ public class VueJoueurCourant extends GridPane {
         img.setFitWidth(105);
 
         cartesEnMain.getChildren().clear();
-        int j=0;
-        int i = 0;
-        for(ICarteTransport c : joueurCourant.getCartesTransport()){
-            VueCarteTransport v = new VueCarteTransport(c);
-            cartesEnMain.add(v,j,i);
-            j++;
-            if(j == joueurCourant.getCartesTransport().size()/2 || j == 5){
-                j=0;
-                i++;
+
+        for(ICarteTransport c: joueurCourant.getCartesTransport()) {
+
+            boolean b = false;
+            for (Node node : cartesEnMain.getChildren()) {
+                VueCarteTransport VCT = (VueCarteTransport) node;
+
+                if (VCT.getCarteTransport().equals(c)){
+                    VCT.setNbCarte(VCT.getNbCarte().get()+1);
+                    b = true;
+                    break;
+                }
             }
+            if(!b){cartesEnMain.getChildren().add(new VueCarteTransport(c,1));}
         }
 
         if(joueurCourant.getCartesTransport().size()!=0) {
+            joueurCourant.cartesTransportProperty().removeListener(cartesTransportsChange);
             joueurCourant.cartesTransportProperty().addListener(cartesTransportsChange);
         }
 
     };
-
-    private void reInitCarteTransports(IJoueur joueurCourant){
-
-    }
-
-    public GridPane getCartesEnMain(){return cartesEnMain;}
 
 
 }

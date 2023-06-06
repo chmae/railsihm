@@ -2,10 +2,7 @@ package fr.umontpellier.iut.rails.mecanique.data;
 
 import fr.umontpellier.iut.rails.ICarteTransport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class CarteTransport implements Comparable<CarteTransport>, ICarteTransport {
 
@@ -66,7 +63,6 @@ public final class CarteTransport implements Comparable<CarteTransport>, ICarteT
     public boolean estWagon() {
         return type == TypeCarteTransport.WAGON;
     }
-
     @Override
     public boolean estBateau() {
         return type == TypeCarteTransport.BATEAU;
@@ -219,5 +215,18 @@ public final class CarteTransport implements Comparable<CarteTransport>, ICarteT
             }
             return Couleur.GRIS;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarteTransport that = (CarteTransport) o;
+        return estDouble == that.estDouble && ancre == that.ancre && type == that.type && couleur == that.couleur;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, couleur, estDouble, ancre, nom);
     }
 }
