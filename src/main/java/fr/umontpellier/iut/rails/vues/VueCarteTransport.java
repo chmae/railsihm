@@ -50,19 +50,20 @@ public class VueCarteTransport extends Pane {
 
     }
 
-    static ImageView getImage(ICarteTransport carteTransport) {
+     static ImageView getImage(ICarteTransport carteTransport) {
         StringBuilder stringBuilder = new StringBuilder();
-        if(carteTransport.estDouble()){
-            stringBuilder.append("-DOUBLE");
-        }else if(carteTransport.estBateau()){
-            stringBuilder.append("-BATEAU");
-        }else if(carteTransport.estWagon()){
-            stringBuilder.append("-WAGON");
-        }else{
-            stringBuilder.append("-JOKER");
-        }
+            if (carteTransport.estBateau()) {
+                stringBuilder.append("-BATEAU");
+            } else if (carteTransport.estDouble()) {
+                stringBuilder.append("-DOUBLE");
+            } else if (carteTransport.estWagon()) {
+                stringBuilder.append("-WAGON");
+            } else {
+                stringBuilder.append("-JOKER");
+            }
 
-        stringBuilder.append("-").append(carteTransport.getStringCouleur());
+
+         stringBuilder.append("-").append(carteTransport.getStringCouleur());
 
         if(carteTransport.getAncre()){
             stringBuilder.append("-").append("A");
