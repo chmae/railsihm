@@ -1,9 +1,11 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.ICarteTransport;
+import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -92,6 +94,29 @@ public class VueJoueurCourant extends GridPane {
             }
         }
     };
+    ListChangeListener<IDestination> listeDestinationposseder = new ListChangeListener<>() { // A REVOIR
+        @Override
+        public void onChanged(Change<? extends IDestination> change) {
+                while (change.next()) {
+                    for (IDestination d : change.getAddedSubList()) {
+                        boolean b = false;
+                        for (Node node : carteDestinationEnMain.getChildren()) {
+                            VueDestination VCT = (VueDestination) node;
+
+                            if (VCT.getDestination().equals(d)) {
+                                b = true;
+                                break;
+                            }
+                        }
+                        if (!b) {
+                            cartesEnMain.getChildren().add(new VueDestination(d));
+                            break;
+                        }
+                    }
+                }
+
+            }
+        };
 
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
         nomJoueur.setText(joueurCourant.getNom());
