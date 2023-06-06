@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -63,6 +64,7 @@ public class VueDuJeu extends VBox {
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
         joueurCourant=new VueJoueurCourant(jeu);
+        joueurCourant.setTranslateY(15);
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
