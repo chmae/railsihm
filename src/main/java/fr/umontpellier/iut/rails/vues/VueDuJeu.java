@@ -46,7 +46,7 @@ public class VueDuJeu extends VBox {
     private TextField textFieldPions;
     private VBox joueursAvatar;
     private HBox top;
-    private GridPane joueurCourantPan;
+    private Pane joueurCourantPan;
 
 
 
@@ -60,18 +60,21 @@ public class VueDuJeu extends VBox {
         instruction = new Label();
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
-        joueurCourant=new VueJoueurCourant();
+        joueurCourant=new VueJoueurCourant(jeu);
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
-        joueurCourantPan = new GridPane();
+        joueurCourantPan = new Pane();
         initAvatar();
+
+        resizeBind();
 
         top.getChildren().addAll(plateau, joueursAvatar);
         top.setSpacing(0);
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
         getChildren().addAll(top,passer,instruction, textFieldPions, listeDestination,joueurCourant,carteVisible, joueurCourantPan);
 
+        //joueurCourant.afficherCartes();
 
     }
 
@@ -88,6 +91,21 @@ public class VueDuJeu extends VBox {
         }
         textFieldPions.textProperty().addListener(textFieldPionsListener);
         jeu.joueurCourantProperty().addListener(changeJoueur);
+
+        GridPane p =new GridPane();
+        joueurCourantPan.setStyle("-fx-background-color:" + joueurCourant.getColor());
+        p.add(joueurCourant.getImg(), 0, 0);
+        p.add(joueurCourant.getNom(), 0, 1);
+        joueurCourantPan.getChildren().add(p);
+    }
+
+    public void resizeBind(){
+
+        joueursAvatar.prefWidthProperty().bind(widthProperty().multiply(0.5));
+        joueursAvatar.prefHeightProperty().bind(heightProperty());
+
+        joueurCourantPan.minHeightProperty().bind(heightProperty().multiply(0.12));
+        joueurCourantPan.maxHeightProperty().bind(heightProperty().multiply(0.12));
     }
 
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {
@@ -191,35 +209,44 @@ public class VueDuJeu extends VBox {
         ImageView img;
 
         for(IJoueur j: jeu.getJoueurs()){
+
+            Pane pane= new Pane();
+            String color = "black";
+            switch (j.getCouleur()){
+                case ROUGE -> color = "red";
+                case BLEU -> color = "blue";
+                case ROSE -> color = "pink";
+                case VERT -> color = "green";
+                case JAUNE -> color = "yellow";
+            }
+
+            GridPane p = new GridPane();
+
             if(j != jeu.joueurCourantProperty().get()) {
 
-//            Pane pane= new Pane();
-//            String color = "black";
-//            switch (j.getCouleur()){
-//                case ROUGE -> color = "red";
-//                case BLEU -> color = "blue";
-//                case ROSE -> color = "pink";
-//                case VERT -> color = "green";
-//                case JAUNE -> color = "yellow";
-//            }
-//            pane.setStyle("-fx-background-color:" + color);
+                pane.setStyle("-fx-background-color:" + color);
 
-                GridPane p = new GridPane();
                 img = new ImageView("images/cartesWagons/avatar-" + j.getCouleur() + ".png");
                 img.setFitHeight(83);
                 img.setFitWidth(105);
                 p.add(img, 0, 0);
                 p.add(new Label(j.getNom()), 0, 1);
 
-                //pane.getChildren().add(p);
-                joueursAvatar.getChildren().add(p);
+                joueursAvatar.getChildren().add(pane);
             }else{
-                img = new ImageView("images/cartesWagons/avatar-" + jeu.joueurCourantProperty().get().getCouleur()+ ".png");
-                img.setFitHeight(83);
-                img.setFitWidth(105);
-                joueurCourantPan.add(img, 0, 0);
-                joueurCourantPan.add(new Label(jeu.joueurCourantProperty().get().getNom()), 0, 1);
+
+                //joueurCourantPan.setStyle("-fx-background-color:" + color);
+
+                //img = new ImageView("images/cartesWagons/avatar-" + jeu.joueurCourantProperty().get().getCouleur()+ ".png");
+//                img.setFitHeight(83);
+//                img.setFitWidth(105);
+//                p.add(img, 0, 0);
+//                p.add(new Label(jeu.joueurCourantProperty().get().getNom()), 0, 1);
+
+                //joueurCourantPan.getChildren().add(pane);
+
             }
+            pane.getChildren().add(p);
         }
     }
 

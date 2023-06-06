@@ -1,14 +1,12 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.ICarteTransport;
+import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
-import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -17,20 +15,29 @@ import javafx.scene.layout.VBox;
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
 public class VueJoueurCourant extends VBox {
+
+    private IJoueur joueurCourant;
     private Label nomJoueur;
     private VBox cartesEnMain;
 
     private HBox cartesJoueurC;
 
-    public VueJoueurCourant(){
+    private ImageView img;
+
+    private String color;
+
+    public VueJoueurCourant(IJeu jeu){
+        joueurCourant = jeu.joueurCourantProperty().get();
         nomJoueur = new Label();
         cartesEnMain = new VBox();
         cartesJoueurC = new HBox();
+        img = new ImageView();
+        color = "";
         getChildren().addAll(nomJoueur,cartesEnMain);
 
     }
     /*A REVOIR CETTE ECOUTEUR */
-    /*ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
+    ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
         nomJoueur.setText(joueurCourant.getNom());
         getChildren().clear();
         for(ICarteTransport c : joueurCourant.getCartesTransport()){
@@ -51,8 +58,13 @@ public class VueJoueurCourant extends VBox {
                 }
                 Label carte = new Label();
                 cartesEnMain.getChildren().add(carte);
+
+            img = new ImageView("images/cartesWagons/avatar-" + joueurCourant.getCouleur()+ ".png");
+            img.setFitHeight(83);
+            img.setFitWidth(105);
+            color = joueurCourant.getCouleur().name();
         }
-    };*/
+    };
 
     public void afficherCartes(){
         cartesJoueurC.getChildren().clear();
@@ -68,4 +80,15 @@ public class VueJoueurCourant extends VBox {
     }
 
 
+    public String getColor() {
+        return color;
+    }
+
+    public ImageView getImg() {
+        return img;
+    }
+
+    public Label getNom() {
+        return nomJoueur;
+    }
 }
