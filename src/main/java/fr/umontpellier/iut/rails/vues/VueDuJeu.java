@@ -8,8 +8,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,10 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -104,12 +100,9 @@ public class VueDuJeu extends VBox {
         plateau.prefHeightProperty().bind(getScene().heightProperty());
         passer.setOnAction(actionEvent -> jeu.passerAEteChoisi() );
         instruction.textProperty().bind(jeu.instructionProperty());
-        joueurCourant.creerBindings();
         plateau.creerBindings();
         getJeu().cartesTransportVisiblesProperty().addListener(ecouteCartesVisibles);
-        for (int i = 0; i < getJeu().getJoueurs().size(); i++) {
-            getJeu().getJoueurs().get(i).cartesTransportProperty().addListener(ecouterCartesJoueur);
-        }
+
         textFieldPions.textProperty().addListener(textFieldPionsListener);
         jeu.joueurCourantProperty().addListener(changeJoueur);
 
@@ -122,6 +115,7 @@ public class VueDuJeu extends VBox {
 
         joueurCourant.minHeightProperty().bind(heightProperty().multiply(0.12));
         joueurCourant.maxHeightProperty().bind(heightProperty().multiply(0.12));
+
     }
 
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {
@@ -155,15 +149,6 @@ public class VueDuJeu extends VBox {
         }
         return null;
     }
-    ListChangeListener<ICarteTransport> ecouterCartesJoueur = new ListChangeListener<>() {
-        @Override
-        public void onChanged(Change<? extends ICarteTransport> change) {
-            change.next();
-            Platform.runLater(() -> {
-                joueurCourant.afficherCartes();
-            });
-        }
-    };
 
     ListChangeListener<ICarteTransport> ecouteCartesVisibles = new ListChangeListener<>() {
         @Override
@@ -173,25 +158,7 @@ public class VueDuJeu extends VBox {
                     if (!change.getAddedSubList().isEmpty()) {
                         for (ICarteTransport c : change.getAddedSubList()) {
                             afficheCarteVisible = new Button(); //a voir si a modifier
-                            StringBuilder stringBuilder = new StringBuilder();
-                            if(c.estBateau()){
-                                stringBuilder.append("-BATEAU");
-                            }else if(c.estWagon()){
-                                stringBuilder.append("-WAGON");
-                            }else if(c.estDouble()){
-                                stringBuilder.append("-DOUBLE");
-                            }else{
-                                stringBuilder.append("-JOKER");
-                            }
-
-                            stringBuilder.append("-").append(c.getStringCouleur());
-
-                            if(c.getAncre()){
-                                stringBuilder.append("-").append("A");
-                            }
-
-                            stringBuilder.append(".png");
-                            carteTVisible = new ImageView("images/cartesWagons/carte" + stringBuilder);
+                            carteTVisible = VueCarteTransport.getImage(c);
                             carteTVisible.setFitWidth(160);
                             carteTVisible.setFitHeight(100);
                             afficheCarteVisible.setGraphic(carteTVisible);

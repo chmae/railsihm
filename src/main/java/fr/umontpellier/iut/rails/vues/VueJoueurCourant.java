@@ -3,8 +3,11 @@ package fr.umontpellier.iut.rails.vues;
 import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
+import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,67 +24,77 @@ public class VueJoueurCourant extends GridPane {
 
     private ObjectProperty<IJoueur> joueurCourant;
     private Label nomJoueur;
-    private VBox cartesEnMain;
-
-    private HBox cartesJoueurC;
-
+    private GridPane cartesEnMain;
+    private GridPane carteDestinationEnMain;
     private ImageView img;
 
 
     public VueJoueurCourant(IJeu jeu){
         joueurCourant = jeu.joueurCourantProperty();
         joueurCourant.addListener(joueurCourantAChange);
+
         nomJoueur = new Label();
-        cartesEnMain = new VBox();
-        cartesJoueurC = new HBox();
+        cartesEnMain = new GridPane();
+
         img = new ImageView();
 
-        add(img, 0, 0);
-        add(nomJoueur, 0, 1);
+        VBox v = new VBox(img, nomJoueur);
+        add(v, 0, 0);
+        add(cartesEnMain, 1, 0);
 
 
     }
-    /*A REVOIR CETTE ECOUTEUR */
+
+    ListChangeListener<ICarteTransport> cartesTransportsChange = new ListChangeListener<ICarteTransport>() {
+        @Override
+        public void onChanged(Change<? extends ICarteTransport> change) {
+            while(change.next()){
+                for(ICarteTransport c: change.getAddedSubList()){
+                    int i;
+                    int j;
+
+                    i = (joueurCourant.get().getCartesTransport().size()-1)/5;
+                    j = (joueurCourant.get().getCartesTransport().size()-1)%5;
+                    System.out.println(j);
+
+                    VueCarteTransport v = new VueCarteTransport(c);
+                    cartesEnMain.add(v,j,i);
+                }
+            }
+        }
+    };
+
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
         nomJoueur.setText(joueurCourant.getNom());
-//        getChildren().clear();
 
         img.setImage(new Image("images/cartesWagons/avatar-" + joueurCourant.getCouleur().name()+ ".png"));
         img.setFitHeight(83);
         img.setFitWidth(105);
 
+        cartesEnMain.getChildren().clear();
+        int j=0;
+        int i = 0;
         for(ICarteTransport c : joueurCourant.getCartesTransport()){
-                if(c.getAncre() && c.estWagon()){
-                    System.out.println("ANCRE" + " " + c.getStringCouleur());
-                }
-                if(c.estWagon()){
-                    System.out.println("WAGON" + " " +  c.getStringCouleur());
-                }
-                else{
-                    System.out.println("BATEAU"+ " " + c.getStringCouleur());
-                }
-                if(c.estBateau() && c.estDouble()){
-                    System.out.println("BATEAU"+ " DOUBLE"+ " " + c.getStringCouleur());
-                }
-                if(c.estJoker()){
-                    System.out.println("JOKER" + " " + c.getStringCouleur());
-                }
-                Label carte = new Label();
-                cartesEnMain.getChildren().add(carte);
+            VueCarteTransport v = new VueCarteTransport(c);
+            cartesEnMain.add(v,j,i);
+            j++;
+            if(j == joueurCourant.getCartesTransport().size()/2 || j == 5){
+                j=0;
+                i++;
+            }
         }
+
+        if(joueurCourant.getCartesTransport().size()!=0) {
+            joueurCourant.cartesTransportProperty().addListener(cartesTransportsChange);
+        }
+
     };
 
-    public void afficherCartes(){
-        cartesJoueurC.getChildren().clear();
-        for(int i = 0; i < ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().getValue().getCartesTransport().size(); i++) {
-            VueCarteTransport c = new VueCarteTransport(((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().getValue().getCartesTransport().get(i),6);
-            cartesJoueurC.getChildren().add(c);
-        }
-    }
-
-    public void creerBindings(){
-        //((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().addListener(joueurCourantAChange);
+    private void reInitCarteTransports(IJoueur joueurCourant){
 
     }
+
+    public GridPane getCartesEnMain(){return cartesEnMain;}
+
 
 }
