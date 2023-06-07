@@ -5,6 +5,9 @@ import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -23,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -57,6 +61,7 @@ public class VueDuJeu extends VBox {
     private HBox boxPionsImg;
     private ImageView imgPionsBateau;
     private ImageView imgPionsWagon;
+    private SimpleIntegerProperty nbCourant;
 
 
     public VueDuJeu(IJeu jeu) {
@@ -94,6 +99,7 @@ public class VueDuJeu extends VBox {
         boxPionsImg.setPadding(new Insets(5));
         boxPionsImg.setAlignment(Pos.CENTER);
         boxPionsImg.setSpacing(10);
+
         joueursAvatar.getChildren().add(boxPionsImg);
 
 
@@ -155,18 +161,17 @@ public class VueDuJeu extends VBox {
         plateau.creerBindings();
         getJeu().cartesTransportVisiblesProperty().addListener(ecouteCartesVisibles);
 
+        nbCourant = new SimpleIntegerProperty(0);
         textFieldPions.textProperty().addListener(textFieldPionsListener);
-        jeu.joueurCourantProperty().addListener(changeJoueur);
-
+        textFieldPions.disableProperty().addListener(textFieldPionsDisable);
     }
 
     public void resizeBind(){
 
         joueursAvatar.prefWidthProperty().bind(widthProperty().multiply(0.5));
-        joueursAvatar.prefHeightProperty().bind(heightProperty());
 
-        joueurCourant.minHeightProperty().bind(heightProperty().multiply(0.12));
-        joueurCourant.maxHeightProperty().bind(heightProperty().multiply(0.12));
+        middle.prefWidthProperty().bind(widthProperty());
+        middle.prefHeightProperty().bind(heightProperty());
 
     }
 
@@ -187,9 +192,9 @@ public class VueDuJeu extends VBox {
                          listeDestination.getChildren().remove(b);
                      }
                  }
-             }
 
-             textFieldPions.setVisible(listeDestination.getChildren().isEmpty());
+                 textFieldPions.setDisable(!listeDestination.getChildren().isEmpty());
+             }
          }
     };
 
@@ -237,8 +242,7 @@ public class VueDuJeu extends VBox {
 
                     }
 
-
-                    textFieldPions.setVisible(carteVisible.getChildren().isEmpty());
+                    textFieldPions.setDisable(!carteVisible.getChildren().isEmpty());
 
                 }
             });
@@ -248,61 +252,33 @@ public class VueDuJeu extends VBox {
     ChangeListener<String> textFieldPionsListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-            jeu.leNombreDePionsSouhaiteAEteRenseigne(textFieldPions.getText());
+                jeu.leNombreDePionsSouhaiteAEteRenseigne(textFieldPions.getText());
         }
     };
 
-    ChangeListener<IJoueur> changeJoueur = (observableValue, iJoueur, t1) -> initAvatar();
-
-    private void initAvatar(){
-        joueursAvatar.getChildren().clear();
-        joueursAvatar.getChildren().add(boxPionsImg);
-        joueursAvatar.getChildren().add(new Separator());
-        ImageView img;
-
-        for(IJoueur j: jeu.getJoueurs()){
-
-            HBox p = new HBox();
-            VBox vb = new VBox();
-
-            if(j != jeu.joueurCourantProperty().get()) {
-
-
-                img = new ImageView("images/cartesWagons/avatar-" + j.getCouleur() + ".png");
-                img.setFitHeight(83);
-                img.setFitWidth(105);
-                vb.getChildren().add(img);
-
-                Label nom = new Label(j.getNom());
-                nom.prefWidthProperty().bind(img.fitWidthProperty());
-                nom.setAlignment(Pos.CENTER);
-                nom.setPadding(new Insets(5));
-                vb.getChildren().add(nom);
-
-                p.getChildren().add(vb);
-
-                Label nbPions = new Label("            "+j.getNbPionsWagon());
-                nbPions.prefHeightProperty().bind(vb.heightProperty());
-                nbPions.setAlignment(Pos.CENTER);
-
-                p.getChildren().add(nbPions); //12 espaces
-
-                Separator sep = new Separator();
-                sep.setOrientation(Orientation.VERTICAL);
-                sep.setTranslateX(26);
-                p.getChildren().add(sep);
-
-                nbPions = new Label("            "+j.getNbPionsBateau());
-                nbPions.prefHeightProperty().bind(vb.heightProperty());
-                nbPions.setAlignment(Pos.CENTER);
-                p.getChildren().add(nbPions);
-
-                joueursAvatar.getChildren().add(p);
-                joueursAvatar.getChildren().add(new Separator());
+    ChangeListener<Boolean> textFieldPionsDisable = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if(!aBoolean) {
+                nbCourant.setValue(nbCourant.get() + 1);
+                System.out.printf("" + nbCourant.get());
+                if (nbCourant.get() > jeu.getJoueurs().size()) {
+                    middle.getChildren().remove(textFieldPions);
+                }
             }
         }
-    }
+    };
 
+
+    private void initAvatar(){
+
+        for(IJoueur j: jeu.getJoueurs()){
+            if(jeu.getJoueurs().indexOf(j) != 0) {
+                joueursAvatar.getChildren().add(new VueAutresJoueurs(jeu.joueurCourantProperty(), j));
+            }
+        }
+
+    }
 
     public IJeu getJeu() {
         return jeu;

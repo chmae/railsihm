@@ -27,12 +27,12 @@ import javafx.scene.text.Font;
  *
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
-public class VueJoueurCourant extends GridPane {
+public class VueJoueurCourant extends Pane {
 
     private ObjectProperty<IJoueur> joueurCourant;
     private Label nomJoueur;
     private HBox cartesEnMain;
-    private GridPane carteDestinationEnMain;
+    private HBox carteDestinationEnMain;
     private ImageView img;
 
     private Label labWagon;
@@ -52,26 +52,35 @@ public class VueJoueurCourant extends GridPane {
         nomJoueur.setAlignment(Pos.CENTER);
         nomJoueur.setPadding(new Insets(5));
 
-        VBox v = new VBox(img, nomJoueur);
-        add(v, 0, 0);
-        add(cartesEnMain, 1, 0);
+        VBox v1 = new VBox(img, nomJoueur);
+        HBox h1 = new HBox(v1, cartesEnMain);
 
         ImageView imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
         imgPionsBateau.setFitWidth(49);
         imgPionsBateau.setFitHeight(48.5);
         labBateau = new Label();
+        labBateau.prefHeightProperty().bind(imgPionsBateau.fitHeightProperty());
+        labBateau.setAlignment(Pos.CENTER);
+        labBateau.setTranslateX(30);
 
         ImageView imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
         imgPionsWagon.setFitWidth(49);
         imgPionsWagon.setFitHeight(48.5);
         labWagon = new Label();
+        labWagon.prefHeightProperty().bind(imgPionsWagon.fitHeightProperty());
+        labWagon.setAlignment(Pos.CENTER);
+        labWagon.setTranslateX(30);
 
+        carteDestinationEnMain = new HBox();
+        carteDestinationEnMain.prefWidthProperty().bind(cartesEnMain.widthProperty());
+        carteDestinationEnMain.setAlignment(Pos.CENTER);
 
-        add(imgPionsWagon, 0,1);
-        add(labWagon, 1, 1);
-        add(imgPionsBateau, 0, 2);
-        add(labBateau, 1, 2);
+        VBox v2 = new VBox(h1, new HBox(imgPionsWagon, labWagon, carteDestinationEnMain), new HBox(imgPionsBateau, labBateau));
 
+        v2.prefHeightProperty().bind(heightProperty());
+        v2.prefWidthProperty().bind(widthProperty());
+
+        getChildren().add(v2);
 
     }
 
@@ -153,6 +162,13 @@ public class VueJoueurCourant extends GridPane {
         if(joueurCourant.getCartesTransport().size()!=0) {
             joueurCourant.cartesTransportProperty().removeListener(cartesTransportsChange);
             joueurCourant.cartesTransportProperty().addListener(cartesTransportsChange);
+        }
+
+        carteDestinationEnMain.getChildren().clear();
+
+        for(IDestination d: joueurCourant.getDestinations()){
+
+            carteDestinationEnMain.getChildren().add(new VueDestination(d));
         }
 
     };

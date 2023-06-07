@@ -1,6 +1,7 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IDestination;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -16,6 +17,7 @@ public class VueDestination extends Pane {
 
     public VueDestination(IDestination destination) {
         this.destination = destination;
+        getChildren().add(new Label(destination.getVilles().toString()));
     }
 
     public IDestination getDestination() {
