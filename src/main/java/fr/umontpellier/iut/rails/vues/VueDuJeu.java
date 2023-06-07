@@ -118,8 +118,17 @@ public class VueDuJeu extends VBox {
         carteTrans_Dest.setAlignment(Pos.BOTTOM_RIGHT);
 
         afficherCarteBateau.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteBateauAEtePiochee());
+        if(afficherCarteBateau==null){
+            ((VueDuJeu) getScene().getRoot()).getJeu().piocheBateauVideProperty();
+        }
+        if(afficherCarteWagon==null){
+            ((VueDuJeu) getScene().getRoot()).getJeu().piocheWagonVideProperty();
+        }
         afficherCarteWagon.setOnAction(actionEvent -> ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteWagonAEtePiochee());
         afficherDestination.setOnAction(actionEvent ->((VueDuJeu) getScene().getRoot()).getJeu().nouvelleDestinationDemandee());
+        if(afficherDestination == null){
+            ((VueDuJeu) getScene().getRoot()).getJeu().piocheDestinationVideProperty();
+        }
         carteTrans_Dest.getChildren().addAll(afficherCarteBateau,afficherCarteWagon,afficherDestination);
 
 
@@ -179,6 +188,7 @@ public class VueDuJeu extends VBox {
                      }
                  }
              }
+
              textFieldPions.setVisible(listeDestination.getChildren().isEmpty());
          }
     };
@@ -235,7 +245,7 @@ public class VueDuJeu extends VBox {
         }
     };
 
-    ChangeListener<String> textFieldPionsListener = new ChangeListener<String>() {
+    ChangeListener<String> textFieldPionsListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
             jeu.leNombreDePionsSouhaiteAEteRenseigne(textFieldPions.getText());
