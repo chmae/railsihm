@@ -194,6 +194,7 @@ public class VueDuJeu extends VBox {
                  }
 
                  textFieldPions.setDisable(!listeDestination.getChildren().isEmpty());
+                 textFieldPions.setVisible(listeDestination.getChildren().isEmpty());
              }
          }
     };
@@ -243,7 +244,7 @@ public class VueDuJeu extends VBox {
                     }
 
                     textFieldPions.setDisable(!carteVisible.getChildren().isEmpty());
-
+                    textFieldPions.setVisible(carteVisible.getChildren().isEmpty());
                 }
             });
         }
