@@ -9,14 +9,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.List;
 
@@ -50,7 +54,9 @@ public class VueDuJeu extends VBox {
     private VBox joueursAvatar;
     private HBox top;
     private VBox middle;
-
+    private HBox boxPionsImg;
+    private ImageView imgPionsBateau;
+    private ImageView imgPionsWagon;
 
 
     public VueDuJeu(IJeu jeu) {
@@ -75,6 +81,20 @@ public class VueDuJeu extends VBox {
         afficherCarteWagon = new Button();
 //        afficheCarteVisible = new Button();
         afficherDestination = new Button();
+
+        imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
+        imgPionsBateau.setFitWidth(49);
+        imgPionsBateau.setFitHeight(48.5);
+
+        imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
+        imgPionsWagon.setFitWidth(49);
+        imgPionsWagon.setFitHeight(48.5);
+
+        boxPionsImg = new HBox(imgPionsWagon, new Separator(Orientation.VERTICAL), imgPionsBateau);
+        boxPionsImg.setPadding(new Insets(5));
+        boxPionsImg.setAlignment(Pos.CENTER);
+        boxPionsImg.setSpacing(10);
+        joueursAvatar.getChildren().add(boxPionsImg);
 
 
         initAvatar();
@@ -226,11 +246,14 @@ public class VueDuJeu extends VBox {
 
     private void initAvatar(){
         joueursAvatar.getChildren().clear();
+        joueursAvatar.getChildren().add(boxPionsImg);
+        joueursAvatar.getChildren().add(new Separator());
         ImageView img;
 
         for(IJoueur j: jeu.getJoueurs()){
 
-            GridPane p = new GridPane();
+            HBox p = new HBox();
+            VBox vb = new VBox();
 
             if(j != jeu.joueurCourantProperty().get()) {
 
@@ -238,10 +261,34 @@ public class VueDuJeu extends VBox {
                 img = new ImageView("images/cartesWagons/avatar-" + j.getCouleur() + ".png");
                 img.setFitHeight(83);
                 img.setFitWidth(105);
-                p.add(img, 0, 0);
-                p.add(new Label(j.getNom()), 0, 1);
+                vb.getChildren().add(img);
+
+                Label nom = new Label(j.getNom());
+                nom.prefWidthProperty().bind(img.fitWidthProperty());
+                nom.setAlignment(Pos.CENTER);
+                nom.setPadding(new Insets(5));
+                vb.getChildren().add(nom);
+
+                p.getChildren().add(vb);
+
+                Label nbPions = new Label("            "+j.getNbPionsWagon());
+                nbPions.prefHeightProperty().bind(vb.heightProperty());
+                nbPions.setAlignment(Pos.CENTER);
+
+                p.getChildren().add(nbPions); //12 espaces
+
+                Separator sep = new Separator();
+                sep.setOrientation(Orientation.VERTICAL);
+                sep.setTranslateX(26);
+                p.getChildren().add(sep);
+
+                nbPions = new Label("            "+j.getNbPionsBateau());
+                nbPions.prefHeightProperty().bind(vb.heightProperty());
+                nbPions.setAlignment(Pos.CENTER);
+                p.getChildren().add(nbPions);
 
                 joueursAvatar.getChildren().add(p);
+                joueursAvatar.getChildren().add(new Separator());
             }
         }
     }

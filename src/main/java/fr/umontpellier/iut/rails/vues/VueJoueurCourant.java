@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -46,6 +47,10 @@ public class VueJoueurCourant extends GridPane {
         cartesEnMain = new HBox();
 
         img = new ImageView();
+
+        nomJoueur.prefWidthProperty().bind(img.fitWidthProperty());
+        nomJoueur.setAlignment(Pos.CENTER);
+        nomJoueur.setPadding(new Insets(5));
 
         VBox v = new VBox(img, nomJoueur);
         add(v, 0, 0);
