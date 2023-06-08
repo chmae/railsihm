@@ -23,7 +23,7 @@ public class RailsIHM extends Application {
     private Stage primaryStage;
     private Jeu jeu;
 
-    private final boolean avecVueChoixJoueurs = false;
+    private final boolean avecVueChoixJoueurs = true;
 
     @Override
     public void start(Stage primaryStage) {
@@ -36,6 +36,11 @@ public class RailsIHM extends Application {
             vueChoixJoueurs = new VueChoixJoueurs();
             vueChoixJoueurs.setNomsDesJoueursDefinisListener(quandLesNomsJoueursSontDefinis);
             vueChoixJoueurs.show();
+            vueChoixJoueurs.setOnCloseRequest(event -> {
+                this.arreterJeu();
+                event.consume();
+            });
+
         } else {
             demarrerPartie();
         }

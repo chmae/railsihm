@@ -1,13 +1,29 @@
 package fr.umontpellier.iut.rails.vues;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Cette classe correspond à une nouvelle fenêtre permettant de choisir le nombre et les noms des joueurs de la partie.
@@ -18,12 +34,70 @@ import java.util.List;
 public class VueChoixJoueurs extends Stage {
 
     private final ObservableList<String> nomsJoueurs;
+    private ObservableList<String> tempNomsJoueurs;
+    private SimpleIntegerProperty nbJoueurs;
+    private Pane principalPane;
+    private HBox boxSelectName;
     public ObservableList<String> nomsJoueursProperty() {
         return nomsJoueurs;
     }
 
     public VueChoixJoueurs() {
         nomsJoueurs = FXCollections.observableArrayList();
+        tempNomsJoueurs = FXCollections.observableArrayList();
+        nbJoueurs = new SimpleIntegerProperty(2); //max 5
+        setChangementDuNombreDeJoueursListener(quandLeNombreDeJoueursChange);
+
+        boxSelectName = new HBox(new TextField(), new TextField());
+        boxSelectName.setSpacing(20);
+        boxSelectName.setAlignment(Pos.CENTER);
+
+        Button butMoins = new Button("-");
+        butMoins.setDisable(true);
+        Button butPlus = new Button("+");
+
+        butMoins.setOnAction(actionEvent -> {
+            if(nbJoueurs.get() > 2) {
+                nbJoueurs.setValue(nbJoueurs.getValue() - 1);
+                butPlus.setDisable(false);
+
+                if(nbJoueurs.get() == 2){
+                    butMoins.setDisable(true);
+                }
+            }
+        });
+
+        butPlus.setOnAction(actionEvent -> {
+            if(nbJoueurs.get() < 5) {
+                nbJoueurs.setValue(nbJoueurs.getValue() + 1);
+                butMoins.setDisable(false);
+
+                if(nbJoueurs.get() == 5){
+                    butPlus.setDisable(true);
+                }
+            }
+        });
+        HBox boxAddJoueur = new HBox(butMoins, butPlus);
+        boxAddJoueur.setSpacing(10);
+        boxAddJoueur.setAlignment(Pos.CENTER);
+
+        Button valider = new Button("Valider");
+
+        VBox vb = new VBox(boxSelectName, boxAddJoueur, valider);
+        vb.prefWidthProperty().bind(widthProperty());
+        vb.prefHeightProperty().bind(heightProperty());
+        vb.setAlignment(Pos.CENTER);
+        vb.setSpacing(10);
+
+        principalPane = new Pane(vb);
+
+        setScene(new Scene(principalPane));
+        setTitle("ChoixDesJoueurs");
+        centerOnScreen();
+
+        setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);
+        setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2);
+
     }
 
     public List<String> getNomsJoueurs() {
@@ -33,12 +107,27 @@ public class VueChoixJoueurs extends Stage {
     /**
      * Définit l'action à exécuter lorsque la liste des participants est correctement initialisée
      */
-    public void setNomsDesJoueursDefinisListener(ListChangeListener<String> quandLesNomsDesJoueursSontDefinis) {}
+    public void setNomsDesJoueursDefinisListener(ListChangeListener<String> quandLesNomsDesJoueursSontDefinis) {
+        nomsJoueurs.addListener(quandLesNomsDesJoueursSontDefinis);
+    }
 
     /**
      * Définit l'action à exécuter lorsque le nombre de participants change
      */
-    protected void setChangementDuNombreDeJoueursListener(ChangeListener<Integer> quandLeNombreDeJoueursChange) {}
+    protected void setChangementDuNombreDeJoueursListener(ChangeListener<Integer> quandLeNombreDeJoueursChange) {
+        nbJoueurs.asObject().addListener(quandLeNombreDeJoueursChange);
+    }
+
+    ChangeListener<Integer> quandLeNombreDeJoueursChange = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
+            if(t1 > integer) {
+                boxSelectName.getChildren().add(new TextField());
+            }else{
+                boxSelectName.getChildren().remove(boxSelectName.getChildren().get(boxSelectName.getChildren().size()-1));
+            }
+        }
+    };
 
     /**
      * Vérifie que tous les noms des participants sont renseignés
@@ -66,7 +155,7 @@ public class VueChoixJoueurs extends Stage {
      * Retourne le nombre de participants à la partie que l'utilisateur a renseigné
      */
     protected int getNombreDeJoueurs() {
-        throw new RuntimeException("Methode à implémenter");
+        return nbJoueurs.get();
     }
 
     /**
@@ -74,7 +163,7 @@ public class VueChoixJoueurs extends Stage {
      * @param playerNumber : le numéro du participant
      */
     protected String getJoueurParNumero(int playerNumber) {
-        throw new RuntimeException("Methode à implémenter");
+        return tempNomsJoueurs.get(playerNumber);
     }
 
 }
