@@ -5,8 +5,6 @@ import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,12 +19,10 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -52,8 +48,10 @@ public class VueDuJeu extends VBox {
     private VueCarteTransport afficheCarteVisible;
     private Button afficherCarteWagon;
     private Button afficherCarteBateau;
+    private Button demandePionsBateau;
+    private Button demandePionsWagon;
+    private Label jeuEnPreparation;
     private Button afficherDestination;
-    private ImageView carteTVisible;
     private TextField textFieldPions;
     private VBox joueursAvatar;
     private HBox top;
@@ -61,7 +59,13 @@ public class VueDuJeu extends VBox {
     private HBox boxPionsImg;
     private ImageView imgPionsBateau;
     private ImageView imgPionsWagon;
+    private TextField textFieldPionsBateauWagon;
     private SimpleIntegerProperty nbCourant;
+
+    private Button route;
+    private VueCarteTransport carteJ;
+    private Button ports;
+    private HBox routePorts;
 
 
     public VueDuJeu(IJeu jeu) {
@@ -72,9 +76,13 @@ public class VueDuJeu extends VBox {
         carteTrans_Dest = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
+//        carteVisible.setTranslateY(-35);
         passer = new Button("Passer");
         instruction = new Label();
         listeDestination = new HBox();
+        jeuEnPreparation= new Label(); //A MODIFIER
+        demandePionsBateau = new Button("PIONS BATEAU");
+        demandePionsWagon = new Button("PIONS WAGON");
         listeDestination.setAlignment(Pos.CENTER);
         joueurCourant=new VueJoueurCourant(jeu);
 //        joueurCourant.setTranslateY(65);
@@ -85,6 +93,11 @@ public class VueDuJeu extends VBox {
         afficherCarteWagon = new Button();
 //        afficheCarteVisible = new Button();
         afficherDestination = new Button();
+        textFieldPionsBateauWagon = new TextField();
+        route = new Button("ROUTE");
+        ports = new Button("PORTS");
+        routePorts = new HBox();
+
 
         imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
         imgPionsBateau.setFitWidth(49);
@@ -101,6 +114,7 @@ public class VueDuJeu extends VBox {
 
         joueursAvatar.getChildren().add(boxPionsImg);
 
+
         initAvatar();
         resizeBind();
 
@@ -110,10 +124,10 @@ public class VueDuJeu extends VBox {
         imageCarteW.setImage(new Image("images/cartesWagons/dos-WAGON.png"));
         imageCarteB.setImage(new Image("images/cartesWagons/dos-BATEAU.png"));
         dest.setImage(new Image("images/cartesWagons/destinations.png"));
-        imageCarteW.setFitHeight(150);
-        imageCarteW.setFitWidth(100);
-        imageCarteB.setFitHeight(150);
-        imageCarteB.setFitWidth(100);
+        imageCarteW.setFitHeight(110);
+        imageCarteW.setFitWidth(60);
+        imageCarteB.setFitHeight(110);
+        imageCarteB.setFitWidth(60);
         dest.setFitWidth(150);
         dest.setFitHeight(100);
         afficherCarteWagon.setGraphic(imageCarteW);
@@ -133,8 +147,65 @@ public class VueDuJeu extends VBox {
         if(afficherDestination == null){
             ((VueDuJeu) getScene().getRoot()).getJeu().piocheDestinationVideProperty();
         }
-        carteTrans_Dest.getChildren().addAll(afficherCarteBateau,afficherCarteWagon,afficherDestination);
 
+        demandePionsBateau.setOnAction(event -> {
+            if (!carteTrans_Dest.getChildren().contains(textFieldPionsBateauWagon)) {
+                carteTrans_Dest.getChildren().add(textFieldPionsBateauWagon);
+                textFieldPionsBateauWagon.setMinWidth(50);
+                textFieldPionsBateauWagon.setMaxWidth(50);
+            }
+
+            textFieldPionsBateauWagon.setVisible(true);
+            demandePionsBateau.setDisable(true);
+            demandePionsWagon.setDisable(true);
+            jeu.nouveauxPionsBateauxDemandes();
+
+            textFieldPionsBateauWagon.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    String input = textFieldPionsBateauWagon.getText();
+                    jeu.leNombreDePionsSouhaiteAEteRenseigne(input);
+                    textFieldPionsBateauWagon.clear();
+                    textFieldPionsBateauWagon.setVisible(false);
+                    demandePionsBateau.setDisable(false);
+                    demandePionsWagon.setDisable(false);
+                    carteTrans_Dest.getChildren().remove(textFieldPionsBateauWagon);
+                }
+            });
+        });
+
+        demandePionsWagon.setOnAction(event -> {
+            if (!carteTrans_Dest.getChildren().contains(textFieldPionsBateauWagon)) {
+                carteTrans_Dest.getChildren().add(textFieldPionsBateauWagon);
+                textFieldPionsBateauWagon.setMinWidth(50);
+                textFieldPionsBateauWagon.setMaxWidth(50);
+            }
+
+            textFieldPionsBateauWagon.setVisible(true);
+            demandePionsWagon.setDisable(true);
+            demandePionsBateau.setDisable(true);
+            jeu.nouveauxPionsWagonsDemandes();
+
+            textFieldPionsBateauWagon.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    String input = textFieldPionsBateauWagon.getText();
+                    jeu.leNombreDePionsSouhaiteAEteRenseigne(input);
+                    textFieldPionsBateauWagon.clear();
+                    textFieldPionsBateauWagon.setVisible(false);
+                    demandePionsWagon.setDisable(false);
+                    demandePionsBateau.setDisable(false);
+                    carteTrans_Dest.getChildren().remove(textFieldPionsBateauWagon);
+                }
+            });
+        });
+
+
+        route.setOnAction(event -> {
+            jeu.uneRouteAEteChoisie(route.getText());
+        });
+        ports.setOnAction(event -> {
+            jeu.unPortAEteChoisi(ports.getText());
+        });
+        carteTrans_Dest.getChildren().addAll(afficherCarteBateau,afficherCarteWagon,afficherDestination,demandePionsBateau,demandePionsWagon);
 
 
         top.getChildren().addAll(plateau, joueursAvatar);
@@ -143,9 +214,11 @@ public class VueDuJeu extends VBox {
         VBox m = new VBox(carteVisible, joueurCourant);
         m.setSpacing(100);
         middle.getChildren().addAll(passer, instruction, textFieldPions, listeDestination, m, carteTrans_Dest);
+        routePorts.getChildren().addAll(route,ports);
+        routePorts.setAlignment(Pos.CENTER);
 
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,middle);
+        getChildren().addAll(top,middle,routePorts);
 
         //joueurCourant.afficherCartes();
 
@@ -154,14 +227,17 @@ public class VueDuJeu extends VBox {
     public void creerBindings() {
         plateau.prefWidthProperty().bind(getScene().widthProperty());
         plateau.prefHeightProperty().bind(getScene().heightProperty());
-        passer.setOnAction(actionEvent -> jeu.passerAEteChoisi() );
+        passer.setOnAction(actionEvent -> jeu.passerAEteChoisi());
         instruction.textProperty().bind(jeu.instructionProperty());
+      //  jeuEnPreparation.labelForProperty().bind(jeu.jeuEnPreparationProperty());
         plateau.creerBindings();
         getJeu().cartesTransportVisiblesProperty().addListener(ecouteCartesVisibles);
 
         nbCourant = new SimpleIntegerProperty(0);
         textFieldPions.textProperty().addListener(textFieldPionsListener);
         textFieldPions.disableProperty().addListener(textFieldPionsDisable);
+
+
     }
 
     public void resizeBind(){
@@ -170,7 +246,6 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
-
 
     }
 
@@ -253,7 +328,7 @@ public class VueDuJeu extends VBox {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 jeu.leNombreDePionsSouhaiteAEteRenseigne(textFieldPions.getText());
-        }
+            }
     };
 
     ChangeListener<Boolean> textFieldPionsDisable = new ChangeListener<>() {
@@ -267,7 +342,7 @@ public class VueDuJeu extends VBox {
             }
         }
     };
-
+    
 
     private void initAvatar(){
 
@@ -283,6 +358,7 @@ public class VueDuJeu extends VBox {
         joueursAvatar.getChildren().add(v);
 
     }
+
 
     public IJeu getJeu() {
         return jeu;
