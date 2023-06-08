@@ -173,7 +173,7 @@ public class VueChoixJoueurs extends Stage {
      * @param playerNumber : le numéro du participant
      */
     protected String getJoueurParNumero(int playerNumber) {
-        return "";
+        return ((TextField) boxSelectName.getChildren().get(playerNumber)).getText();
     }
 
     private void initAvatar(){
