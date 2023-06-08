@@ -40,15 +40,20 @@ public class VuePlateau extends Pane {
     }
 
     EventHandler<MouseEvent> choixRoute = event -> {
-        System.out.println("On a cliqué sur une route");
+        Rectangle rectangleClique = (Rectangle) event.getSource();
+        String nomRoute = rectangleClique.getId();
+        ((VueDuJeu) getScene().getRoot()).getJeu().uneRouteAEteChoisie(nomRoute);
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
-        System.out.println("On a cliqué sur un port");
+        Circle cercleClique = (Circle) event.getSource();
+        String nomPort = cercleClique.getId();
+        ((VueDuJeu) getScene().getRoot()).getJeu().unPortAEteChoisi(nomPort);
     };
 
+
     public void creerBindings() {
- ajouterVilles();
+        ajouterVilles();
         ajouterPorts();
         ajouterRoutes();
         bindRedimensionEtCentragePlateau();
