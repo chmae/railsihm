@@ -72,7 +72,6 @@ public class VueDuJeu extends VBox {
         carteTrans_Dest = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
-//        carteVisible.setTranslateY(-35);
         passer = new Button("Passer");
         instruction = new Label();
         listeDestination = new HBox();
@@ -101,7 +100,6 @@ public class VueDuJeu extends VBox {
         boxPionsImg.setSpacing(10);
 
         joueursAvatar.getChildren().add(boxPionsImg);
-
 
         initAvatar();
         resizeBind();
@@ -172,6 +170,7 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
+
 
     }
 
@@ -262,7 +261,6 @@ public class VueDuJeu extends VBox {
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
             if(!aBoolean) {
                 nbCourant.setValue(nbCourant.get() + 1);
-                System.out.printf("" + nbCourant.get());
                 if (nbCourant.get() > jeu.getJoueurs().size()) {
                     middle.getChildren().remove(textFieldPions);
                 }
@@ -273,11 +271,16 @@ public class VueDuJeu extends VBox {
 
     private void initAvatar(){
 
+        VBox v =  new VBox();
         for(IJoueur j: jeu.getJoueurs()){
             if(jeu.getJoueurs().indexOf(j) != 0) {
-                joueursAvatar.getChildren().add(new VueAutresJoueurs(jeu.joueurCourantProperty(), j));
+
+                v.getChildren().add(new VueAutresJoueurs(jeu.joueurCourantProperty(), j));
             }
         }
+
+        v.setSpacing(50);
+        joueursAvatar.getChildren().add(v);
 
     }
 

@@ -12,19 +12,16 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Screen;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,68 +42,95 @@ public class VueChoixJoueurs extends Stage {
     private final ObservableList<String> nomsJoueurs;
     private SimpleIntegerProperty nbJoueurs;
     private Pane principalPane;
-    private HBox boxSelectName;
+    private VBox boxSelectName;
+    private HBox unSelectName;
+    private HBox deuxSelectName;
 
     public ObservableList<String> nomsJoueursProperty() {
         return nomsJoueurs;
     }
 
     public VueChoixJoueurs() {
+
+
+        BorderPane root = new BorderPane();
+
         nomsJoueurs = FXCollections.observableArrayList();
         nbJoueurs = new SimpleIntegerProperty(2); //max 5
         setChangementDuNombreDeJoueursListener(quandLeNombreDeJoueursChange);
 
-        boxSelectName = new HBox(new TextField(), new TextField());
+
+        //PARTIE TEXTFIELD POUR LE NOM DES JOUEURS
+
+        unSelectName = new HBox(new TextField(), new TextField());
+        unSelectName.setAlignment(Pos.CENTER);
+        unSelectName.setSpacing(50);
+        unSelectName.setTranslateX(-50);
+
+        deuxSelectName = new HBox();
+        deuxSelectName.setSpacing(50);
+        deuxSelectName.setAlignment(Pos.CENTER);
+        deuxSelectName.setTranslateX(-50);
+
+        boxSelectName = new VBox(unSelectName, deuxSelectName);
         boxSelectName.setSpacing(20);
         boxSelectName.setAlignment(Pos.CENTER);
 
-        Button butMoins = new Button("-");
-        butMoins.setDisable(true);
-        Button butPlus = new Button("+");
+        boxSelectName.setSpacing(150);
 
-        butMoins.setOnAction(actionEvent -> {
-            if(nbJoueurs.get() > 2) {
-                nbJoueurs.setValue(nbJoueurs.getValue() - 1);
-                butPlus.setDisable(false);
+        root.setCenter(boxSelectName);
 
-                if(nbJoueurs.get() == 2){
-                    butMoins.setDisable(true);
-                }
-            }
-        });
+        //FIN DE LA PARTIE TEXTEFIELD POUR LE NOM DES JOUEURS
 
-        butPlus.setOnAction(actionEvent -> {
-            if(nbJoueurs.get() < 5) {
-                nbJoueurs.setValue(nbJoueurs.getValue() + 1);
-                butMoins.setDisable(false);
+        //PARTIE CHOIX DU NOMBRE
 
-                if(nbJoueurs.get() == 5){
-                    butPlus.setDisable(true);
-                }
-            }
-        });
-        HBox boxAddJoueur = new HBox(butMoins, butPlus);
+        ToggleGroup group = new ToggleGroup();
+
+        VBox boxAddJoueur = new VBox();
+
+        for(int i=5; i>1; i--){
+            RadioButton but = new RadioButton(""+i);
+            but.setToggleGroup(group);
+            if(i == 2){but.setSelected(true);}
+
+            but.setOnAction(actionEvent -> {
+                nbJoueurs.setValue(Integer.parseInt(but.getText()));
+            });
+
+            boxAddJoueur.getChildren().add(but);
+        }
+
         boxAddJoueur.setSpacing(10);
         boxAddJoueur.setAlignment(Pos.CENTER);
 
         Button valider = new Button("Valider");
+        valider.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
+        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 2 ;"));
+        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 2 ;"));
+        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 2 ;");
 
-        VBox vb = new VBox(boxSelectName, boxAddJoueur, valider);
-        vb.prefWidthProperty().bind(widthProperty());
-        vb.prefHeightProperty().bind(heightProperty());
-        vb.setAlignment(Pos.CENTER);
-        vb.setSpacing(10);
+        VBox adETval = new VBox(new Label("Combien de personnes vont jouer au jeu ?"),boxAddJoueur, valider);
+        HBox adETvalETsep = new HBox(new Separator(Orientation.VERTICAL), adETval);
 
-        principalPane = new Pane(vb);
+        adETval.setSpacing(50);
+        adETval.setAlignment(Pos.CENTER);
+        adETval.prefHeightProperty().bind(adETvalETsep.heightProperty());
 
-        setScene(new Scene(principalPane));
+        adETval.translateXProperty().bind(adETvalETsep.widthProperty().divide(4));
+        adETvalETsep.setTranslateX(-100);
+
+        root.setRight(adETvalETsep);
+
+        //FIN PARTIE CHOIX DU NOMBRE
+
+        root.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
+
+        setScene(new Scene(root));
         setTitle("ChoixDesJoueurs");
         centerOnScreen();
 
         setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);
         setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2);
-
-        initAvatar();
     }
 
     public List<String> getNomsJoueurs() {
@@ -132,10 +156,23 @@ public class VueChoixJoueurs extends Stage {
         @Override
         public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
             if(t1 > integer) {
-                boxSelectName.getChildren().add(new TextField());
+                for(int i=integer+1; i<=t1; i++) {
+                    if(i > 3) {
+                        deuxSelectName.getChildren().add(new TextField());
+                    }else{
+                        unSelectName.getChildren().add((new TextField()));
+                    }
+                }
             }else{
-                boxSelectName.getChildren().remove(boxSelectName.getChildren().get(boxSelectName.getChildren().size()-1));
+                for(int i=integer; i>t1; i--) {
+                    if(i > 3) {
+                        deuxSelectName.getChildren().remove(deuxSelectName.getChildren().get(deuxSelectName.getChildren().size() - 1));
+                    }else{
+                        unSelectName.getChildren().remove(unSelectName.getChildren().get(unSelectName.getChildren().size() - 1));
+                    }
+                }
             }
+
         }
     };
 
@@ -173,33 +210,11 @@ public class VueChoixJoueurs extends Stage {
      * @param playerNumber : le numéro du participant
      */
     protected String getJoueurParNumero(int playerNumber) {
-        return ((TextField) boxSelectName.getChildren().get(playerNumber)).getText();
-    }
 
-    private void initAvatar(){
-        //joueursAvatar.getChildren().clear();
-        ImageView img;
-
-        for (String j : nomsJoueurs) {
-
-            HBox p = new HBox();
-            VBox vb = new VBox();
-
-            img = new ImageView("images/cartesWagons/avatar-" + j + ".png");
-            img.setFitHeight(83);
-            img.setFitWidth(105);
-            vb.getChildren().add(img);
-
-            Label nom = new Label(j);
-            nom.prefWidthProperty().bind(img.fitWidthProperty());
-            nom.setAlignment(Pos.CENTER);
-            vb.getChildren().add(nom);
-
-            p.getChildren().add(vb);
-
-
-
-
+        if(playerNumber > 3){
+            return ((TextField)deuxSelectName.getChildren().get(playerNumber-4)).getText();
+        }else{
+            return ((TextField)unSelectName.getChildren().get(playerNumber-1)).getText();
         }
     }
 
