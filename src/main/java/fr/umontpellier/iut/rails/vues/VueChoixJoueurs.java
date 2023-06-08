@@ -13,6 +13,8 @@ import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -64,11 +66,11 @@ public class VueChoixJoueurs extends Stage {
 
         TextField TF1 = new TextField();
         TF1.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-        TF1.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+        TF1.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;-fx-background-radius: 5px; -fx-border-radius: 5px;");
 
         TextField TF2 = new TextField();
         TF2.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-        TF2.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+        TF2.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;-fx-background-radius: 5px; -fx-border-radius: 5px;");
 
         unSelectName = new HBox(TF1, TF2);
         unSelectName.setAlignment(Pos.CENTER);
@@ -113,9 +115,9 @@ public class VueChoixJoueurs extends Stage {
 
         Button valider = new Button("Valider");
         valider.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 1 ;"));
-        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;"));
-        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
+        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
+        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
+        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ; -fx-background-radius: 40px; -fx-border-radius: 40px;");
 
         VBox adETval = new VBox(new Label("Combien de personnes vont jouer au jeu ?"),boxAddJoueur, valider);
         HBox adETvalETsep = new HBox(new Separator(Orientation.VERTICAL), adETval);
@@ -169,7 +171,7 @@ public class VueChoixJoueurs extends Stage {
 
                     TextField TF = new TextField();
                     TF.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-                    TF.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+                    TF.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;-fx-background-radius: 5px; -fx-border-radius: 5px;");
 
                     if(i > 3) {
                         deuxSelectName.getChildren().add(TF);
