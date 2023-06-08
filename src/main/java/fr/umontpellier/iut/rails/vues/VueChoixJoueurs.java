@@ -2,6 +2,7 @@ package fr.umontpellier.iut.rails.vues;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
+import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
@@ -19,6 +20,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -34,17 +43,16 @@ import java.util.Optional;
 public class VueChoixJoueurs extends Stage {
 
     private final ObservableList<String> nomsJoueurs;
-    private ObservableList<String> tempNomsJoueurs;
     private SimpleIntegerProperty nbJoueurs;
     private Pane principalPane;
     private HBox boxSelectName;
+
     public ObservableList<String> nomsJoueursProperty() {
         return nomsJoueurs;
     }
 
     public VueChoixJoueurs() {
         nomsJoueurs = FXCollections.observableArrayList();
-        tempNomsJoueurs = FXCollections.observableArrayList();
         nbJoueurs = new SimpleIntegerProperty(2); //max 5
         setChangementDuNombreDeJoueursListener(quandLeNombreDeJoueursChange);
 
@@ -98,11 +106,13 @@ public class VueChoixJoueurs extends Stage {
         setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);
         setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2);
 
+        initAvatar();
     }
 
     public List<String> getNomsJoueurs() {
         return nomsJoueurs;
     }
+
 
     /**
      * Définit l'action à exécuter lorsque la liste des participants est correctement initialisée
@@ -163,7 +173,35 @@ public class VueChoixJoueurs extends Stage {
      * @param playerNumber : le numéro du participant
      */
     protected String getJoueurParNumero(int playerNumber) {
-        return tempNomsJoueurs.get(playerNumber);
+        return "";
     }
+
+    private void initAvatar(){
+        //joueursAvatar.getChildren().clear();
+        ImageView img;
+
+        for (String j : nomsJoueurs) {
+
+            HBox p = new HBox();
+            VBox vb = new VBox();
+
+            img = new ImageView("images/cartesWagons/avatar-" + j + ".png");
+            img.setFitHeight(83);
+            img.setFitWidth(105);
+            vb.getChildren().add(img);
+
+            Label nom = new Label(j);
+            nom.prefWidthProperty().bind(img.fitWidthProperty());
+            nom.setAlignment(Pos.CENTER);
+            vb.getChildren().add(nom);
+
+            p.getChildren().add(vb);
+
+
+
+
+        }
+    }
+
 
 }
