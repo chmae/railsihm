@@ -62,7 +62,15 @@ public class VueChoixJoueurs extends Stage {
 
         //PARTIE TEXTFIELD POUR LE NOM DES JOUEURS
 
-        unSelectName = new HBox(new TextField(), new TextField());
+        TextField TF1 = new TextField();
+        TF1.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
+        TF1.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+
+        TextField TF2 = new TextField();
+        TF2.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
+        TF2.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+
+        unSelectName = new HBox(TF1, TF2);
         unSelectName.setAlignment(Pos.CENTER);
         unSelectName.setSpacing(50);
         unSelectName.setTranslateX(-50);
@@ -105,9 +113,9 @@ public class VueChoixJoueurs extends Stage {
 
         Button valider = new Button("Valider");
         valider.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 2 ;"));
-        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 2 ;"));
-        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 2 ;");
+        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 1 ;"));
+        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;"));
+        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
 
         VBox adETval = new VBox(new Label("Combien de personnes vont jouer au jeu ?"),boxAddJoueur, valider);
         HBox adETvalETsep = new HBox(new Separator(Orientation.VERTICAL), adETval);
@@ -156,11 +164,17 @@ public class VueChoixJoueurs extends Stage {
         @Override
         public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
             if(t1 > integer) {
+
                 for(int i=integer+1; i<=t1; i++) {
+
+                    TextField TF = new TextField();
+                    TF.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
+                    TF.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;");
+
                     if(i > 3) {
-                        deuxSelectName.getChildren().add(new TextField());
+                        deuxSelectName.getChildren().add(TF);
                     }else{
-                        unSelectName.getChildren().add((new TextField()));
+                        unSelectName.getChildren().add(TF);
                     }
                 }
             }else{
