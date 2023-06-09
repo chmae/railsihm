@@ -70,7 +70,12 @@ public class VueDuJeu extends VBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
-        setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
+        setStyle(
+                "-fx-background-image: url(" +
+                        "'images/background.jpg'"+
+                        ");"+
+                        "-fx-background-size: cover;"
+        );
         top = new HBox();
         middle = new VBox();
         plateau = new VuePlateau();
@@ -251,6 +256,7 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
+
     }
 
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {

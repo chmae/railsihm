@@ -23,7 +23,7 @@ public class RailsIHM extends Application {
     private Stage primaryStage;
     private Jeu jeu;
 
-    private final boolean avecVueChoixJoueurs = false;
+    private final boolean avecVueChoixJoueurs = true;
 
     @Override
     public void start(Stage primaryStage) {
@@ -60,6 +60,7 @@ public class RailsIHM extends Application {
         jeu = new Jeu(nomsJoueurs.toArray(new String[0]));
         VueDuJeu vueDuJeu = new VueDuJeu(jeu);
         Scene scene = new Scene(vueDuJeu, Screen.getPrimary().getBounds().getWidth() * DonneesGraphiques.pourcentageEcran, Screen.getPrimary().getBounds().getHeight() * DonneesGraphiques.pourcentageEcran); // la scene doit être créée avant de mettre en place les bindings
+
         vueDuJeu.creerBindings();
         jeu.run(); // le jeu doit être démarré après que les bindings ont été mis en place
         primaryStage.setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);

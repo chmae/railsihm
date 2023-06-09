@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -67,6 +68,12 @@ public class VueChoixJoueurs extends Stage {
         nbJoueurs = new SimpleIntegerProperty(2); //max 5
         setChangementDuNombreDeJoueursListener(quandLeNombreDeJoueursChange);
 
+        root.setStyle(
+                "-fx-background-image: url(" +
+                        "'images/background.jpg'"+
+                        ");"+
+                "-fx-background-size: cover;"
+        );
 
         //PARTIE TEXTFIELD POUR LE NOM DES JOUEURS
 
@@ -110,11 +117,11 @@ public class VueChoixJoueurs extends Stage {
             if(i == 2){but.setSelected(true);}
 
             but.setOnAction(actionEvent -> {
-                nbJoueurs.setValue(Integer.parseInt(but.getText()));
+                creationTxt(nbJoueurs.get(), Integer.parseInt(but.getText()));
             });
             but.setOnKeyPressed(keyEvent -> {
                 if(keyEvent.getCode() == KeyCode.ENTER){
-                    nbJoueurs.setValue(Integer.parseInt(but.getText()));
+                    creationTxt(nbJoueurs.get(), Integer.parseInt(but.getText()));
                 }
             });
 
@@ -144,7 +151,7 @@ public class VueChoixJoueurs extends Stage {
 
         //FIN PARTIE CHOIX DU NOMBRE
 
-        root.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
+//        root.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
 
         setScene(new Scene(root));
         setTitle("ChoixDesJoueurs");
@@ -153,6 +160,35 @@ public class VueChoixJoueurs extends Stage {
         setMinWidth(Screen.getPrimary().getBounds().getWidth() / 1.8);
         setMinHeight(Screen.getPrimary().getBounds().getHeight() / 1.8);
 
+    }
+
+    private void creationTxt(int integer, int t1){
+        System.out.println(t1>integer);
+        if(t1 > integer) {
+
+            for(int i=integer+1; i<=t1; i++) {
+
+                TextField TF = new TextField();
+                TF.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
+                TF.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;-fx-background-radius: 5px; -fx-border-radius: 5px;");
+
+                if(i > 3) {
+                    deuxSelectName.getChildren().add(TF);
+                }else{
+                    unSelectName.getChildren().add(TF);
+                }
+            }
+        }else{
+            for(int i=integer; i>t1; i--) {
+                if(i > 3) {
+                    deuxSelectName.getChildren().remove(deuxSelectName.getChildren().get(deuxSelectName.getChildren().size() - 1));
+                }else{
+                    unSelectName.getChildren().remove(unSelectName.getChildren().get(unSelectName.getChildren().size() - 1));
+                }
+            }
+        }
+
+        nbJoueurs.setValue(t1);
     }
 
     public List<String> getNomsJoueurs() {
@@ -177,29 +213,7 @@ public class VueChoixJoueurs extends Stage {
     ChangeListener<Number> quandLeNombreDeJoueursChange = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number integer, Number t1) {
-            if(t1.intValue() > integer.intValue()) {
 
-                for(int i=integer.intValue()+1; i<=t1.intValue(); i++) {
-
-                    TextField TF = new TextField();
-                    TF.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-                    TF.setStyle("-fx-border-color: #fba76c; -fx-border-width: 2 ;-fx-background-radius: 5px; -fx-border-radius: 5px;");
-
-                    if(i > 3) {
-                        deuxSelectName.getChildren().add(TF);
-                    }else{
-                        unSelectName.getChildren().add(TF);
-                    }
-                }
-            }else{
-                for(int i=integer.intValue(); i>t1.intValue(); i--) {
-                    if(i > 3) {
-                        deuxSelectName.getChildren().remove(deuxSelectName.getChildren().get(deuxSelectName.getChildren().size() - 1));
-                    }else{
-                        unSelectName.getChildren().remove(unSelectName.getChildren().get(unSelectName.getChildren().size() - 1));
-                    }
-                }
-            }
 
         }
     };

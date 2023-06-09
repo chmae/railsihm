@@ -80,6 +80,7 @@ public class VueJoueurCourant extends Pane {
 
         v2.prefHeightProperty().bind(heightProperty());
         v2.prefWidthProperty().bind(widthProperty());
+        v2.minHeightProperty().bind(heightProperty());
 
         getChildren().add(v2);
 
