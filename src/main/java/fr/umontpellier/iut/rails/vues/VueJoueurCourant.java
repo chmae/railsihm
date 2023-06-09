@@ -108,29 +108,6 @@ public class VueJoueurCourant extends Pane {
             }
         }
     };
-    ListChangeListener<IDestination> listeDestinationposseder = new ListChangeListener<>() { // A REVOIR
-        @Override
-        public void onChanged(Change<? extends IDestination> change) {
-                while (change.next()) {
-                    for (IDestination d : change.getAddedSubList()) {
-                        boolean b = false;
-                        for (Node node : carteDestinationEnMain.getChildren()) {
-                            VueDestination VCT = (VueDestination) node;
-
-                            if (VCT.getDestination().equals(d)) {
-                                b = true;
-                                break;
-                            }
-                        }
-                        if (!b) {
-                            cartesEnMain.getChildren().add(new VueDestination(d));
-                            break;
-                        }
-                    }
-                }
-
-            }
-        };
 
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
         nomJoueur.setText(joueurCourant.getNom());
