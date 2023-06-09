@@ -70,6 +70,7 @@ public class VueDuJeu extends VBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
+        setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
         top = new HBox();
         middle = new VBox();
         plateau = new VuePlateau();
@@ -107,10 +108,10 @@ public class VueDuJeu extends VBox {
         imgPionsWagon.setFitWidth(49);
         imgPionsWagon.setFitHeight(48.5);
 
-        boxPionsImg = new HBox(imgPionsWagon, new Separator(Orientation.VERTICAL), imgPionsBateau);
+        boxPionsImg = new HBox(imgPionsWagon, imgPionsBateau);
         boxPionsImg.setPadding(new Insets(5));
         boxPionsImg.setAlignment(Pos.CENTER);
-        boxPionsImg.setSpacing(10);
+        boxPionsImg.setSpacing(20);
 
         joueursAvatar.getChildren().add(boxPionsImg);
 
@@ -246,7 +247,6 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
-
     }
 
     ListChangeListener<IDestination> destinationsInitiales = new ListChangeListener<>() {

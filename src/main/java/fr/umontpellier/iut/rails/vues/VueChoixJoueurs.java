@@ -1,6 +1,8 @@
 package fr.umontpellier.iut.rails.vues;
 
 import javafx.application.Platform;
+import javafx.beans.binding.When;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.value.ChangeListener;
@@ -10,11 +12,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -29,6 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.SocketImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,6 +112,11 @@ public class VueChoixJoueurs extends Stage {
             but.setOnAction(actionEvent -> {
                 nbJoueurs.setValue(Integer.parseInt(but.getText()));
             });
+            but.setOnKeyPressed(keyEvent -> {
+                if(keyEvent.getCode() == KeyCode.ENTER){
+                    nbJoueurs.setValue(Integer.parseInt(but.getText()));
+                }
+            });
 
             boxAddJoueur.getChildren().add(but);
         }
@@ -139,8 +150,9 @@ public class VueChoixJoueurs extends Stage {
         setTitle("ChoixDesJoueurs");
         centerOnScreen();
 
-        setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);
-        setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2);
+        setMinWidth(Screen.getPrimary().getBounds().getWidth() / 1.8);
+        setMinHeight(Screen.getPrimary().getBounds().getHeight() / 1.8);
+
     }
 
     public List<String> getNomsJoueurs() {
@@ -158,16 +170,16 @@ public class VueChoixJoueurs extends Stage {
     /**
      * Définit l'action à exécuter lorsque le nombre de participants change
      */
-    protected void setChangementDuNombreDeJoueursListener(ChangeListener<Integer> quandLeNombreDeJoueursChange) {
+    protected void setChangementDuNombreDeJoueursListener(ChangeListener<Number> quandLeNombreDeJoueursChange) {
         nbJoueurs.asObject().addListener(quandLeNombreDeJoueursChange);
     }
 
-    ChangeListener<Integer> quandLeNombreDeJoueursChange = new ChangeListener<>() {
+    ChangeListener<Number> quandLeNombreDeJoueursChange = new ChangeListener<>() {
         @Override
-        public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
-            if(t1 > integer) {
+        public void changed(ObservableValue<? extends Number> observableValue, Number integer, Number t1) {
+            if(t1.intValue() > integer.intValue()) {
 
-                for(int i=integer+1; i<=t1; i++) {
+                for(int i=integer.intValue()+1; i<=t1.intValue(); i++) {
 
                     TextField TF = new TextField();
                     TF.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
@@ -180,7 +192,7 @@ public class VueChoixJoueurs extends Stage {
                     }
                 }
             }else{
-                for(int i=integer; i>t1; i--) {
+                for(int i=integer.intValue(); i>t1.intValue(); i--) {
                     if(i > 3) {
                         deuxSelectName.getChildren().remove(deuxSelectName.getChildren().get(deuxSelectName.getChildren().size() - 1));
                     }else{

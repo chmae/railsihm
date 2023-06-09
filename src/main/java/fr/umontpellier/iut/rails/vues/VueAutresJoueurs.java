@@ -32,6 +32,8 @@ public class VueAutresJoueurs extends Pane {
     private Label nbPionsW;
     private Label nbPionsB;
 
+    private VBox vb;
+
 
     public VueAutresJoueurs(ObjectProperty<IJoueur> joueurCourant, IJoueur joueurVue) {
 
@@ -48,7 +50,7 @@ public class VueAutresJoueurs extends Pane {
         nomJoueur.setAlignment(Pos.CENTER);
         nomJoueur.setPadding(new Insets(5));
 
-        VBox vb = new VBox(img, nomJoueur);
+        vb = new VBox(img, nomJoueur);
 
         HBox p = new HBox(vb);
 
