@@ -53,7 +53,6 @@ public class VueDuJeu extends VBox {
     private Button afficherCarteBateau;
     private Button demandePionsBateau;
     private Button demandePionsWagon;
-    private Label jeuEnPreparation;
     private Button afficherDestination;
     private TextField textFieldPions;
     private VBox joueursAvatar;
@@ -64,13 +63,7 @@ public class VueDuJeu extends VBox {
     private ImageView imgPionsWagon;
     private TextField textFieldPionsBateauWagon;
     private SimpleIntegerProperty nbCourant;
-
-    private Button route;
-    private Button ports;
-    private HBox routePorts;
     private ImageView imgports;
-
-    private ObjectProperty<IJoueur> joueurC;
 
     private ImageView getImgPionsBateau;
     private  ImageView getImgPionsWagon;
@@ -84,28 +77,21 @@ public class VueDuJeu extends VBox {
         carteTrans_Dest = new HBox();
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
-//        carteVisible.setTranslateY(-35);
         passer = new Button("Passer");
         instruction = new Label();
         listeDestination = new HBox();
-        jeuEnPreparation= new Label(); //A MODIFIER
         demandePionsBateau = new Button();
         demandePionsWagon = new Button();
         listeDestination.setAlignment(Pos.CENTER);
         joueurCourant=new VueJoueurCourant(jeu);
-//        joueurCourant.setTranslateY(65);
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
         afficherCarteBateau = new Button();
         afficherCarteWagon = new Button();
-//        afficheCarteVisible = new Button();
         afficherDestination = new Button();
         textFieldPionsBateauWagon = new TextField();
-        route = new Button("ROUTE");
-        ports = new Button();
-        routePorts = new HBox();
-        joueurC = jeu.joueurCourantProperty();
+
 
 
 
@@ -176,8 +162,6 @@ public class VueDuJeu extends VBox {
         imgports = new ImageView("images/port.png");
         imgports.setFitWidth(40);
         imgports.setFitHeight(40);
-        ports.setGraphic(imgports);
-        ports.setShape(new Circle(40));
 
         demandePionsBateau.setOnAction(event -> {
             if (!carteTrans_Dest.getChildren().contains(textFieldPionsBateauWagon)) {
@@ -229,18 +213,6 @@ public class VueDuJeu extends VBox {
             });
         });
 
-//        route.setShape(new Circle(40));
-//        route.setOnAction(event -> {//FONCTIONNE A MOITIE
-//            jeu.uneRouteAEteChoisie(route.getText());
-//            for(ICarteTransport carte : joueurC.get().cartesTransportProperty()){
-//                jeu.uneCarteDuJoueurEstJouee(carte);
-//            }
-//        });
-
-
-        ports.setOnAction(event -> {
-            jeu.unPortAEteChoisi(ports.getText());
-        });
         carteTrans_Dest.getChildren().addAll(afficherCarteBateau,afficherCarteWagon,afficherDestination,demandePionsBateau,demandePionsWagon);
 
 
@@ -250,13 +222,10 @@ public class VueDuJeu extends VBox {
         VBox m = new VBox(carteVisible, joueurCourant);
         m.setSpacing(100);
         middle.getChildren().addAll(passer, instruction, textFieldPions, listeDestination, m, carteTrans_Dest);
-        routePorts.getChildren().addAll(ports);
-        routePorts.setAlignment(Pos.CENTER);
 
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
-        getChildren().addAll(top,middle,routePorts);
+        getChildren().addAll(top,middle);
 
-        //joueurCourant.afficherCartes();
 
     }
 
@@ -265,13 +234,15 @@ public class VueDuJeu extends VBox {
         plateau.prefHeightProperty().bind(getScene().heightProperty());
         passer.setOnAction(actionEvent -> jeu.passerAEteChoisi());
         instruction.textProperty().bind(jeu.instructionProperty());
-      //  jeuEnPreparation.labelForProperty().bind(jeu.jeuEnPreparationProperty());
         plateau.creerBindings();
         getJeu().cartesTransportVisiblesProperty().addListener(ecouteCartesVisibles);
+
 
         nbCourant = new SimpleIntegerProperty(0);
         textFieldPions.textProperty().addListener(textFieldPionsListener);
         textFieldPions.disableProperty().addListener(textFieldPionsDisable);
+        carteTrans_Dest.disableProperty().bind(jeu.jeuEnPreparationProperty());
+        carteTrans_Dest.visibleProperty().bind(jeu.jeuEnPreparationProperty().not());
     }
 
     public void resizeBind(){
@@ -302,6 +273,8 @@ public class VueDuJeu extends VBox {
 
                  textFieldPions.setDisable(!listeDestination.getChildren().isEmpty());
                  textFieldPions.setVisible(listeDestination.getChildren().isEmpty());
+
+
              }
          }
     };
@@ -352,6 +325,7 @@ public class VueDuJeu extends VBox {
 
                     textFieldPions.setDisable(!carteVisible.getChildren().isEmpty());
                     textFieldPions.setVisible(carteVisible.getChildren().isEmpty());
+
                 }
             });
         }
@@ -389,15 +363,12 @@ public class VueDuJeu extends VBox {
 
         v.setSpacing(50);
         joueursAvatar.getChildren().add(v);
-
     }
 
 
     public IJeu getJeu() {
         return jeu;
     }
-
-    public VueJoueurCourant getVJC(){return joueurCourant;}
 
 
 }

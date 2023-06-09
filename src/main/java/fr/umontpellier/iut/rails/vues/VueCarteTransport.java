@@ -53,10 +53,6 @@ public class VueCarteTransport extends Pane {
                 ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteDuJoueurEstJouee(getCarteTransport());
             });
         }
-
-
-
-
     }
 
      static ImageView getImage(ICarteTransport carteTransport) {

@@ -38,6 +38,7 @@ public class VueJoueurCourant extends Pane {
     private Label labWagon;
     private Label labBateau;
 
+
     public VueJoueurCourant(IJeu jeu){
 
         joueurCourant = jeu.joueurCourantProperty();
@@ -135,6 +136,7 @@ public class VueJoueurCourant extends Pane {
             }
             if(!b){cartesEnMain.getChildren().add(new VueCarteTransport(c,1));}
         }
+        joueurCourant.getNbPorts();
 
         if(joueurCourant.getCartesTransport().size()!=0) {
             joueurCourant.cartesTransportProperty().removeListener(cartesTransportsChange);
@@ -147,10 +149,8 @@ public class VueJoueurCourant extends Pane {
 
             carteDestinationEnMain.getChildren().add(new VueDestination(d));
         }
+        joueurCourant.getNbPorts();
 
     };
-
-    public HBox getCartesEnMain(){return cartesEnMain;}
-
 
 }

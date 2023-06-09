@@ -46,6 +46,7 @@ public class VuePlateau extends Pane {
         Rectangle rectangleClique = (Rectangle) event.getSource();
         String nomRoute = rectangleClique.getId();
         ((VueDuJeu) getScene().getRoot()).getJeu().uneRouteAEteChoisie(nomRoute);
+
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
