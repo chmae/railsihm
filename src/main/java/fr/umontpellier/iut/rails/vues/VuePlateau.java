@@ -1,10 +1,13 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IRoute;
+import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;

@@ -4,6 +4,7 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -47,7 +48,13 @@ public class VueCarteTransport extends Pane {
             nbTxt.setTextFill(Color.WHITE);
 
             getChildren().addAll(nbCircle, nbTxt);
+
+            setOnMouseClicked(mouseEvent -> {
+                ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteDuJoueurEstJouee(getCarteTransport());
+            });
         }
+
+
 
 
     }

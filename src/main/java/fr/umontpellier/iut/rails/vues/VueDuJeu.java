@@ -229,13 +229,13 @@ public class VueDuJeu extends VBox {
             });
         });
 
-        route.setShape(new Circle(40));
-        route.setOnAction(event -> {//FONCTIONNE A MOITIE
-            jeu.uneRouteAEteChoisie(route.getText());
-            for(ICarteTransport carte : joueurC.get().cartesTransportProperty()){
-                jeu.uneCarteDuJoueurEstJouee(carte);
-            }
-        });
+//        route.setShape(new Circle(40));
+//        route.setOnAction(event -> {//FONCTIONNE A MOITIE
+//            jeu.uneRouteAEteChoisie(route.getText());
+//            for(ICarteTransport carte : joueurC.get().cartesTransportProperty()){
+//                jeu.uneCarteDuJoueurEstJouee(carte);
+//            }
+//        });
 
 
         ports.setOnAction(event -> {
@@ -250,7 +250,7 @@ public class VueDuJeu extends VBox {
         VBox m = new VBox(carteVisible, joueurCourant);
         m.setSpacing(100);
         middle.getChildren().addAll(passer, instruction, textFieldPions, listeDestination, m, carteTrans_Dest);
-        routePorts.getChildren().addAll(route,ports);
+        routePorts.getChildren().addAll(ports);
         routePorts.setAlignment(Pos.CENTER);
 
         jeu.destinationsInitialesProperty().addListener(destinationsInitiales);
@@ -396,6 +396,8 @@ public class VueDuJeu extends VBox {
     public IJeu getJeu() {
         return jeu;
     }
+
+    public VueJoueurCourant getVJC(){return joueurCourant;}
 
 
 }

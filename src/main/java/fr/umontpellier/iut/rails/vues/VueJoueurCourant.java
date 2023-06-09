@@ -150,5 +150,7 @@ public class VueJoueurCourant extends Pane {
 
     };
 
+    public HBox getCartesEnMain(){return cartesEnMain;}
+
 
 }
