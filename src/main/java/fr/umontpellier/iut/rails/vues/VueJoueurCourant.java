@@ -61,6 +61,7 @@ public class VueJoueurCourant extends Pane {
         imgPionsBateau.setFitHeight(48.5);
         labBateau = new Label();
         labBateau.prefHeightProperty().bind(imgPionsBateau.fitHeightProperty());
+        labBateau.prefWidthProperty().bind(imgPionsBateau.fitWidthProperty());
         labBateau.setAlignment(Pos.CENTER);
         labBateau.setTranslateX(30);
 
@@ -69,12 +70,13 @@ public class VueJoueurCourant extends Pane {
         imgPionsWagon.setFitHeight(48.5);
         labWagon = new Label();
         labWagon.prefHeightProperty().bind(imgPionsWagon.fitHeightProperty());
+        labWagon.prefWidthProperty().bind(imgPionsWagon.fitWidthProperty());
         labWagon.setAlignment(Pos.CENTER);
         labWagon.setTranslateX(30);
 
         carteDestinationEnMain = new HBox();
         carteDestinationEnMain.prefWidthProperty().bind(cartesEnMain.widthProperty());
-        carteDestinationEnMain.setAlignment(Pos.CENTER);
+        carteDestinationEnMain.prefHeightProperty().bind(cartesEnMain.heightProperty());
 
         VBox v2 = new VBox(h1, new HBox(imgPionsWagon, labWagon, carteDestinationEnMain), new HBox(imgPionsBateau, labBateau));
 

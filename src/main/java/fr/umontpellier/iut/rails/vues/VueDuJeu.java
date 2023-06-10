@@ -70,12 +70,7 @@ public class VueDuJeu extends VBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
-        setStyle(
-                "-fx-background-image: url(" +
-                        "'images/background.jpg'"+
-                        ");"+
-                        "-fx-background-size: cover;"
-        );
+        setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
         top = new HBox();
         middle = new VBox();
         plateau = new VuePlateau();
@@ -256,6 +251,8 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
+        carteTrans_Dest.prefWidthProperty().bind(heightProperty());
+        carteTrans_Dest.prefHeightProperty().bind(widthProperty());
 
     }
 
