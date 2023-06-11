@@ -27,7 +27,7 @@ public class RailsIHM extends Application {
     private Jeu jeu;
     private RailsIHM railsIHM;
 
-    private final boolean avecVueChoixJoueurs = true;
+    private final boolean avecVueChoixJoueurs = false;
 
     @Override
     public void start(Stage primaryStage) {
@@ -68,8 +68,8 @@ public class RailsIHM extends Application {
 
         vueDuJeu.creerBindings();
         jeu.run(); // le jeu doit être démarré après que les bindings ont été mis en place
-        primaryStage.setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2);
-        primaryStage.setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2);
+        primaryStage.setMinWidth(Screen.getPrimary().getBounds().getWidth() / 2 + 100);
+        primaryStage.setMinHeight(Screen.getPrimary().getBounds().getHeight() / 2 + 340);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Rails");
         primaryStage.centerOnScreen();

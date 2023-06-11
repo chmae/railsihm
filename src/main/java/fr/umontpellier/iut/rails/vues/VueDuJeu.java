@@ -58,8 +58,6 @@ public class VueDuJeu extends VBox {
     private HBox top;
     private VBox middle;
     private HBox boxPionsImg;
-    private ImageView imgPionsBateau;
-    private ImageView imgPionsWagon;
     private TextField textFieldPionsBateauWagon;
     private SimpleIntegerProperty nbCourant;
     private ImageView imgports;
@@ -96,27 +94,11 @@ public class VueDuJeu extends VBox {
         textFieldPions = new TextField();
         textFieldPions.setMaxWidth(100);
         joueursAvatar = new VBox();
+        joueursAvatar.setPadding(new Insets(20));
         afficherCarteBateau = new Button();
         afficherCarteWagon = new Button();
         afficherDestination = new Button();
         textFieldPionsBateauWagon = new TextField();
-
-
-        imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
-        imgPionsBateau.setFitWidth(49);
-        imgPionsBateau.setFitHeight(48.5);
-
-        imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
-        imgPionsWagon.setFitWidth(49);
-        imgPionsWagon.setFitHeight(48.5);
-
-
-        boxPionsImg = new HBox(imgPionsWagon, imgPionsBateau);
-        boxPionsImg.setPadding(new Insets(5));
-        boxPionsImg.setAlignment(Pos.CENTER);
-        boxPionsImg.setSpacing(20);
-
-        joueursAvatar.getChildren().add(boxPionsImg);
 
 
         initAvatar();

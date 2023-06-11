@@ -48,6 +48,7 @@ public class VueJoueurCourant extends Pane {
         joueurCourant.addListener(joueurCourantAChange);
 
         nomJoueur = new Label();
+        nomJoueur.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 2; -fx-border-width: 1 ;");
         cartesEnMain = new HBox();
 
         img = new ImageView();
@@ -57,6 +58,7 @@ public class VueJoueurCourant extends Pane {
         nomJoueur.setPadding(new Insets(5));
 
         VBox v1 = new VBox(img, nomJoueur);
+        v1.setSpacing(5);
         HBox h1 = new HBox(v1, cartesEnMain);
 
         ImageView imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
@@ -87,6 +89,7 @@ public class VueJoueurCourant extends Pane {
 
 
         VBox v2 = new VBox(h1, new HBox(imgPionsWagon, labWagon, carteDestinationEnMain), new HBox(imgPionsBateau, labBateau));
+        v2.setSpacing(5);
 
         v2.prefHeightProperty().bind(heightProperty());
         v2.prefWidthProperty().bind(widthProperty());
@@ -122,7 +125,7 @@ public class VueJoueurCourant extends Pane {
     };
 
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
-        nomJoueur.setText(joueurCourant.getNom());
+        nomJoueur.setText(joueurCourant.getNom() + " : " + joueurCourant.getScore());
 
         img.setImage(new Image("images/cartesWagons/avatar-" + joueurCourant.getCouleur().name()+ ".png"));
         img.setFitHeight(83);

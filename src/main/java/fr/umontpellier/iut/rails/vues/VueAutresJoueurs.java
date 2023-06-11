@@ -5,6 +5,7 @@ import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -33,6 +34,7 @@ public class VueAutresJoueurs extends Pane {
     private Label nbPionsB;
 
     private VBox vb;
+    private HBox p;
 
 
     public VueAutresJoueurs(ObjectProperty<IJoueur> joueurCourant, IJoueur joueurVue) {
@@ -48,34 +50,59 @@ public class VueAutresJoueurs extends Pane {
         nomJoueur = new Label(joueurVue.getNom());
         nomJoueur.prefWidthProperty().bind(img.fitWidthProperty());
         nomJoueur.setAlignment(Pos.CENTER);
-        nomJoueur.setPadding(new Insets(5));
+        nomJoueur.setPadding(new Insets(10));
         nomJoueur.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 2; -fx-border-width: 1 ;");
 
         vb = new VBox(img, nomJoueur);
 
-        HBox p = new HBox(vb);
+        p = new HBox(vb);
 
         nbPionsW = new Label();
-        nbPionsW.setText(""+joueurVue.getNbPionsWagon());
+        nbPionsW.setText("Wagons: "+joueurVue.getNbPionsWagon());
         nbPionsW.prefWidthProperty().bind(widthProperty().divide(4.6));
         nbPionsW.prefHeightProperty().bind(p.heightProperty());
         nbPionsW.setAlignment(Pos.CENTER);
         nbPionsW.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
 
         nbPionsB = new Label();
-        nbPionsB.setText(""+joueurVue.getNbPionsBateau());
+        nbPionsB.setText("Bateaux: "+joueurVue.getNbPionsBateau());
         nbPionsB.prefWidthProperty().bind(widthProperty().divide(4.6));
         nbPionsB.prefHeightProperty().bind(p.heightProperty());
         nbPionsB.setAlignment(Pos.CENTER);
         nbPionsB.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
 
+        nbPionsW.widthProperty().addListener(changeWidth);
+
         Separator sep = new Separator(Orientation.VERTICAL);
         sep.setHalignment(Pos.CENTER.getHpos());
 
-        p.getChildren().addAll(nbPionsW, nbPionsB);
+//        ImageView imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
+//        imgPionsBateau.setFitWidth(49.0/1.5);
+//        imgPionsBateau.setFitHeight(48.5/1.5);
+//
+//        ImageView imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
+//        imgPionsWagon.setFitWidth(49.0/1.5);
+//        imgPionsWagon.setFitHeight(48.5/1.5);
+
+
+        p.getChildren().addAll(nbPionsW,nbPionsB);
+        p.setSpacing(10);
         getChildren().add(p);
+
     }
 
+    ChangeListener<Number> changeWidth = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+            if (t1.intValue() < 65) {
+                nbPionsW.setText("" + joueurVue.getNbPionsWagon());
+                nbPionsB.setText("" + joueurVue.getNbPionsBateau());
+            } else {
+                nbPionsW.setText("Wagons: " + joueurVue.getNbPionsWagon());
+                nbPionsB.setText("Bateaux: " + joueurVue.getNbPionsBateau());
+            }
+        }
+    };
 
     ChangeListener<IJoueur> joueurCourantAChange= (observableValue, ancienJoueur, joueurCourant) ->{
 
@@ -88,8 +115,13 @@ public class VueAutresJoueurs extends Pane {
 
             nomJoueur.setText(joueurVue.getNom());
 
-            nbPionsW.setText(""+joueurVue.getNbPionsWagon());
-            nbPionsB.setText(""+joueurVue.getNbPionsBateau());
+            if(nbPionsW.getWidth() < 65){
+                nbPionsW.setText("" + joueurVue.getNbPionsWagon());
+                nbPionsB.setText("" + joueurVue.getNbPionsBateau());
+            }else {
+                nbPionsW.setText("Wagons: " + joueurVue.getNbPionsWagon());
+                nbPionsB.setText("Bateaux: " + joueurVue.getNbPionsBateau());
+            }
 
         }
 
