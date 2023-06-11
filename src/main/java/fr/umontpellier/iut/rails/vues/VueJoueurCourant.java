@@ -10,12 +10,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -64,6 +67,7 @@ public class VueJoueurCourant extends Pane {
         labBateau.prefWidthProperty().bind(imgPionsBateau.fitWidthProperty());
         labBateau.setAlignment(Pos.CENTER);
         labBateau.setTranslateX(30);
+        labBateau.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;");
 
         ImageView imgPionsWagon = new ImageView("images/bouton-pions-wagon.png");
         imgPionsWagon.setFitWidth(49);
@@ -73,10 +77,14 @@ public class VueJoueurCourant extends Pane {
         labWagon.prefWidthProperty().bind(imgPionsWagon.fitWidthProperty());
         labWagon.setAlignment(Pos.CENTER);
         labWagon.setTranslateX(30);
+        labWagon.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;");
 
         carteDestinationEnMain = new HBox();
-        carteDestinationEnMain.prefWidthProperty().bind(cartesEnMain.widthProperty());
+        carteDestinationEnMain.prefWidthProperty().bind(VueDuJeu.getWidthProperty().subtract(200));
         carteDestinationEnMain.prefHeightProperty().bind(cartesEnMain.heightProperty());
+        carteDestinationEnMain.setAlignment(Pos.CENTER);
+        carteDestinationEnMain.setTranslateX(60);
+
 
         VBox v2 = new VBox(h1, new HBox(imgPionsWagon, labWagon, carteDestinationEnMain), new HBox(imgPionsBateau, labBateau));
 
@@ -150,7 +158,8 @@ public class VueJoueurCourant extends Pane {
 
         for(IDestination d: joueurCourant.getDestinations()){
 
-            carteDestinationEnMain.getChildren().add(new VueDestination(d));
+            VueDestination des = new VueDestination(d);
+            carteDestinationEnMain.getChildren().add(des);
         }
         joueurCourant.getNbPorts();
 

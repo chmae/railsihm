@@ -14,14 +14,20 @@ import javafx.scene.layout.Pane;
 public class VueDestination extends Pane {
 
     private final IDestination destination;
+    private final Label lab;
 
     public VueDestination(IDestination destination) {
         this.destination = destination;
-        getChildren().add(new Label(destination.getVilles().toString()));
+        lab = new Label(destination.getVilles().toString());
+        lab.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 2; -fx-border-width: 1 ;");
+        getChildren().add(lab);
     }
 
     public IDestination getDestination() {
         return destination;
     }
 
+    public Label getLab() {
+        return lab;
+    }
 }

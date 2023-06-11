@@ -49,6 +49,7 @@ public class VueAutresJoueurs extends Pane {
         nomJoueur.prefWidthProperty().bind(img.fitWidthProperty());
         nomJoueur.setAlignment(Pos.CENTER);
         nomJoueur.setPadding(new Insets(5));
+        nomJoueur.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 2; -fx-border-width: 1 ;");
 
         vb = new VBox(img, nomJoueur);
 
@@ -59,17 +60,19 @@ public class VueAutresJoueurs extends Pane {
         nbPionsW.prefWidthProperty().bind(widthProperty().divide(4.6));
         nbPionsW.prefHeightProperty().bind(p.heightProperty());
         nbPionsW.setAlignment(Pos.CENTER);
+        nbPionsW.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
 
         nbPionsB = new Label();
         nbPionsB.setText(""+joueurVue.getNbPionsBateau());
         nbPionsB.prefWidthProperty().bind(widthProperty().divide(4.6));
         nbPionsB.prefHeightProperty().bind(p.heightProperty());
         nbPionsB.setAlignment(Pos.CENTER);
+        nbPionsB.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-border-width: 1 ;");
 
         Separator sep = new Separator(Orientation.VERTICAL);
         sep.setHalignment(Pos.CENTER.getHpos());
 
-        p.getChildren().addAll(nbPionsW, sep, nbPionsB);
+        p.getChildren().addAll(nbPionsW, nbPionsB);
         getChildren().add(p);
     }
 

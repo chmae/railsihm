@@ -4,8 +4,11 @@ import fr.umontpellier.iut.rails.mecanique.Jeu;
 import fr.umontpellier.iut.rails.vues.DonneesGraphiques;
 import fr.umontpellier.iut.rails.vues.VueChoixJoueurs;
 import fr.umontpellier.iut.rails.vues.VueDuJeu;
+import fr.umontpellier.iut.rails.vues.VueResultats;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,12 +25,14 @@ public class RailsIHM extends Application {
     private VueChoixJoueurs vueChoixJoueurs;
     private Stage primaryStage;
     private Jeu jeu;
+    private RailsIHM railsIHM;
 
     private final boolean avecVueChoixJoueurs = true;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        railsIHM = this;
         debuterJeu();
     }
 
@@ -75,7 +80,24 @@ public class RailsIHM extends Application {
             event.consume();
         });
         primaryStage.show();
+        jeu.finDePartieProperty().addListener(finDujeux);
+
     }
+
+    ChangeListener<Boolean> finDujeux = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if(t1){
+                VueResultats VR = new VueResultats(railsIHM);
+                closeStage();
+                primaryStage.setScene(new Scene(VR, Screen.getPrimary().getBounds().getWidth() * DonneesGraphiques.pourcentageEcran, Screen.getPrimary().getBounds().getHeight() * DonneesGraphiques.pourcentageEcran));
+                openStage();
+            }
+        }
+    };
+
+    public void closeStage(){primaryStage.close();}
+    public void openStage(){primaryStage.show();}
 
     private final ListChangeListener<String> quandLesNomsJoueursSontDefinis = change -> {
         if (!vueChoixJoueurs.getNomsJoueurs().isEmpty())

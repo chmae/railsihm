@@ -4,26 +4,25 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
-import fr.umontpellier.iut.rails.mecanique.Joueur;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 
 import java.util.List;
 
@@ -64,13 +63,21 @@ public class VueDuJeu extends VBox {
     private TextField textFieldPionsBateauWagon;
     private SimpleIntegerProperty nbCourant;
     private ImageView imgports;
-
     private ImageView getImgPionsBateau;
     private  ImageView getImgPionsWagon;
+    private static ReadOnlyDoubleProperty saveWidthProperty;
+    private static ReadOnlyDoubleProperty saveHeightProperty;
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
-        setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dcb688, #346364)");
+        setStyle(
+                "-fx-background-image: url(" +
+                        "'images/background.jpg'"+
+                        ");"+
+                        "-fx-background-size: stretch;"
+        );
+        saveWidthProperty = widthProperty();
+        saveHeightProperty = heightProperty();
         top = new HBox();
         middle = new VBox();
         plateau = new VuePlateau();
@@ -78,7 +85,9 @@ public class VueDuJeu extends VBox {
         carteVisible = new HBox();
         carteVisible.setAlignment(Pos.CENTER);
         passer = new Button("Passer");
+        passer.setStyle("-fx-border-color: #fba76c; -fx-border-width: 1 ; -fx-background-radius: 40px; -fx-border-radius: 40px;");
         instruction = new Label();
+        instruction.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 2; -fx-border-width: 1 ;");
         listeDestination = new HBox();
         demandePionsBateau = new Button();
         demandePionsWagon = new Button();
@@ -91,8 +100,6 @@ public class VueDuJeu extends VBox {
         afficherCarteWagon = new Button();
         afficherDestination = new Button();
         textFieldPionsBateauWagon = new TextField();
-
-
 
 
         imgPionsBateau = new ImageView("images/bouton-pions-bateau.png");
@@ -251,6 +258,7 @@ public class VueDuJeu extends VBox {
 
         middle.prefWidthProperty().bind(widthProperty());
         middle.prefHeightProperty().bind(heightProperty());
+
         carteTrans_Dest.prefWidthProperty().bind(heightProperty());
         carteTrans_Dest.prefHeightProperty().bind(widthProperty());
 
@@ -373,5 +381,6 @@ public class VueDuJeu extends VBox {
         return jeu;
     }
 
-
+    public static ReadOnlyDoubleProperty getWidthProperty(){return saveWidthProperty;}
+    public static ReadOnlyDoubleProperty saveHeightPropertyProperty() {return saveHeightProperty;}
 }

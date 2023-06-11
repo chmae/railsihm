@@ -72,7 +72,7 @@ public class VueChoixJoueurs extends Stage {
                 "-fx-background-image: url(" +
                         "'images/background.jpg'"+
                         ");"+
-                "-fx-background-size: cover;"
+                "-fx-background-size: stretch;"
         );
 
         //PARTIE TEXTFIELD POUR LE NOM DES JOUEURS
@@ -133,11 +133,13 @@ public class VueChoixJoueurs extends Stage {
 
         Button valider = new Button("Valider");
         valider.setOnAction(actionEvent -> setListeDesNomsDeJoueurs());
-        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: white; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
-        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
-        valider.setStyle("-fx-background-color: #5c776d; -fx-border-color: #fba76c; -fx-border-width: 1 ; -fx-background-radius: 40px; -fx-border-radius: 40px;");
+        valider.setOnMousePressed(mouseEvent -> valider.setStyle("-fx-border-color: white; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
+        valider.setOnMouseReleased(mouseEvent -> valider.setStyle("-fx-border-color: #fba76c; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;"));
+        valider.setStyle("-fx-border-color: #fba76c; -fx-border-width: 1 ; -fx-background-radius: 40px; -fx-border-radius: 40px;");
 
-        VBox adETval = new VBox(new Label("Combien de personnes vont jouer au jeu ?"),boxAddJoueur, valider);
+        Label lab = new Label("Combien de personnes vont jouer au jeu ?");
+        lab.setStyle("-fx-background-color: white; -fx-border-color: #fba76c; -fx-padding: 5; -fx-border-width: 1 ;-fx-background-radius: 40px; -fx-border-radius: 40px;");
+        VBox adETval = new VBox(lab,boxAddJoueur, valider);
         HBox adETvalETsep = new HBox(new Separator(Orientation.VERTICAL), adETval);
 
         adETval.setSpacing(50);
@@ -163,7 +165,6 @@ public class VueChoixJoueurs extends Stage {
     }
 
     private void creationTxt(int integer, int t1){
-        System.out.println(t1>integer);
         if(t1 > integer) {
 
             for(int i=integer+1; i<=t1; i++) {
