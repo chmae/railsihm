@@ -49,9 +49,10 @@ public class VueCarteTransport extends Pane {
 
             getChildren().addAll(nbCircle, nbTxt);
 
-            setOnMouseClicked(mouseEvent -> {
-                ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteDuJoueurEstJouee(getCarteTransport());
-            });
+//            setOnMouseClicked(mouseEvent -> {
+//                System.out.println("ok cliquer");
+//                ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteDuJoueurEstJouee(carteTransport);
+//            });
         }
 
     }

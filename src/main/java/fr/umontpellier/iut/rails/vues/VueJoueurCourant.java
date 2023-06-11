@@ -84,7 +84,7 @@ public class VueJoueurCourant extends Pane {
         carteDestinationEnMain = new HBox();
         carteDestinationEnMain.prefWidthProperty().bind(VueDuJeu.getWidthProperty().subtract(200));
         carteDestinationEnMain.prefHeightProperty().bind(cartesEnMain.heightProperty());
-        carteDestinationEnMain.setAlignment(Pos.CENTER);
+//        carteDestinationEnMain.setAlignment(Pos.CENTER);
         carteDestinationEnMain.setTranslateX(60);
 
 
@@ -164,8 +164,6 @@ public class VueJoueurCourant extends Pane {
             VueDestination des = new VueDestination(d);
             carteDestinationEnMain.getChildren().add(des);
         }
-        joueurCourant.getNbPorts();
 
     };
-
 }

@@ -50,7 +50,6 @@ public class VueChoixJoueurs extends Stage {
 
     private final ObservableList<String> nomsJoueurs;
     private SimpleIntegerProperty nbJoueurs;
-    private Pane principalPane;
     private VBox boxSelectName;
     private HBox unSelectName;
     private HBox deuxSelectName;
@@ -100,6 +99,7 @@ public class VueChoixJoueurs extends Stage {
         boxSelectName.setAlignment(Pos.CENTER);
 
         boxSelectName.setSpacing(150);
+
 
         root.setCenter(boxSelectName);
 

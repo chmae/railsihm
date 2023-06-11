@@ -47,7 +47,12 @@ public class VuePlateau extends Pane {
         String nomRoute = rectangleClique.getId();
         ((VueDuJeu) getScene().getRoot()).getJeu().uneRouteAEteChoisie(nomRoute);
 
+        List<ICarteTransport> listeCarteTransport = new ArrayList<>(((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().get().getCartesTransport());
+        for (ICarteTransport c : listeCarteTransport) {
+            ((VueDuJeu) getScene().getRoot()).getJeu().uneCarteDuJoueurEstJouee(c);
+        }
     };
+
 
     EventHandler<MouseEvent> choixPort = event -> {
         Circle cercleClique = (Circle) event.getSource();

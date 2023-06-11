@@ -57,7 +57,6 @@ public class VueDuJeu extends VBox {
     private VBox joueursAvatar;
     private HBox top;
     private VBox middle;
-    private HBox boxPionsImg;
     private TextField textFieldPionsBateauWagon;
     private SimpleIntegerProperty nbCourant;
     private ImageView imgports;
